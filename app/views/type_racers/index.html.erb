@@ -1,1 +1,4 @@
 <h1>TypeRacers</h1>
+<% if current_user.present?  && current_user.has_roles?(:admin)  %>
+<h1>You are admin</h1>
+<% end %>
