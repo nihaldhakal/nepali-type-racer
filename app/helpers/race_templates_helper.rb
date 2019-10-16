@@ -1,0 +1,2 @@
+module RaceTemplatesHelper
+end
