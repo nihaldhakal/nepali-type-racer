@@ -36,7 +36,8 @@ class RaceTemplatesController < ApplicationController
       flash[:success] = "Text updated"
       redirect_to @race
     else
-      flash[:danger] = "Text cannot be updated"
+      flash.now[:danger] = "Text cannot be updated"
+      render 'edit'
     end
   end
 
@@ -44,6 +45,7 @@ class RaceTemplatesController < ApplicationController
     @race = RaceTemplate.find(params[:id]).destroy
     redirect_to race_templates_path
   end
+
 
   private
 
