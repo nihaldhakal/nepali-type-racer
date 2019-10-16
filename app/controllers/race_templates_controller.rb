@@ -3,8 +3,17 @@ class RaceTemplatesController < ApplicationController
     @race = RaceTemplate.all
   end
 
+  def show
+    @race = RaceTemplate.find(params[:id])
+  end
+
   def new
     @race = RaceTemplate.new
+  end
+
+
+  def edit
+    @race = RaceTemplate.find(params[:id])
   end
 
   def create
@@ -20,13 +29,6 @@ class RaceTemplatesController < ApplicationController
     end
   end
 
-  def show
-    @race = RaceTemplate.find(params[:id])
-  end
-
-  def edit
-    @race = RaceTemplate.find(params[:id])
-  end
 
   def update
     @race = RaceTemplate.find(params[:id])
