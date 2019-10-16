@@ -1,0 +1,2 @@
+class RaceTemplate < ApplicationRecord
+end

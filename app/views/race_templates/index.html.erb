@@ -1,0 +1,17 @@
+<table class="table table-striped table-dark">
+  <thead >
+  <tr>
+    <th>Text</th>
+  </tr>
+  </thead>
+  <tbody>
+  <%= link_to 'New Race Template', new_race_template_path %>
+  <% @race.each do |race| %>
+    <tr>
+      <td> <%= race.text %> </td>
+      <td> <%= link_to 'Show', race %></td>
+      <td>  <%= link_to 'Delete', race, { method: :delete, data: { confirm: "Are you sure?" } } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
