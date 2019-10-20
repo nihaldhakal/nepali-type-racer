@@ -1,3 +1,3 @@
 class TypeRacer < ApplicationRecord
-  
+
 end
