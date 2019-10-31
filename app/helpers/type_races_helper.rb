@@ -1,0 +1,2 @@
+module TypeRacesHelper
+end

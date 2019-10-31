@@ -10,13 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191018110412) do
+ActiveRecord::Schema.define(version: 20191031111909) do
 
   create_table "race_templates", force: :cascade do |t|
     t.text "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_published"
+  end
+
+  create_table "type_races", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "description"
+    t.text "text_area"
   end
 
   create_table "users", force: :cascade do |t|

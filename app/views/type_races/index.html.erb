@@ -11,9 +11,16 @@
     </tr>
     </thead>
     <tbody>
-      <tr>
-        <td> <%= @template.text %> </td>
-      </tr>
+    <tr>
+      <td id="text"> <%= @templates.text %> </td>
+      <td>
+        <%= form_with(model:@template,local:true) do |form| %>
+          <div class="field">
+            <%= form.text_area :text_area, id: :template_text, remote:true %>
+          </div>
+        <% end %>
+      </td>
+    </tr>
     </tbody>
   </table>
 <% end %>
