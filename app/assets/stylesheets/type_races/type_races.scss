@@ -1,0 +1,26 @@
+// Place all the styles related to the type_races controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+#showAccuracy.hidden {
+  display: none;
+}
+
+.match{
+  background: lawngreen;
+}
+
+.unmatch{
+  background: lightcoral;
+}
+
+#barProgress {
+  width: 1000px;
+  background-color: black;
+  height: 42px;
+}
+#newBar {
+  width: 50px;
+  height: 42px;
+  /*background-color: green;*/
+
+}
