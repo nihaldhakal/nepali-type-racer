@@ -24,7 +24,7 @@ var countCharacters=0;
 var startTime;
 var userKeyPressCount=0;
 
-$(document).ready(function () {
+$(document).on("turbolinks:load", function () {
     displayRandomText();
 
     $("button").on("click",function () {
@@ -52,6 +52,7 @@ $(document).ready(function () {
 });
 
 function displayRandomText() {
+
     var randomText=$("#displayedText").text();
     var randomIndex = Math.floor(Math.random()*quotes.length);
     var randomText = quotes[randomIndex];
