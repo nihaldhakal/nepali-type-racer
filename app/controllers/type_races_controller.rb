@@ -3,33 +3,30 @@ class TypeRacesController < ApplicationController
 
   def index
 
-
   end
 
   def new
     @templates = RaceTemplate.all.sample
-
     @type_racer = TypeRaces.new
     # @template = TypeRaces.create(user: current_user)
     # redirect_to type_races_edit_path(@template)
   end
 
   def create
-    @template = TypeRaces.new(type_racer_params)
+    @type_racer = TypeRaces.new(type_racer_params)
     respond_to do |format|
-      if @template.save
-        format.html { redirect_to  @template, notice: 'Text was successfully created.'}
-        format.json { render json: { text: @template.text_area}, status: :created }
+      if @type_racer.save
+        format.html { redirect_to  @type_racer, notice: 'Text was successfully created.'}
+        format.json { render json: { text: @type_racer.text_area}, status: :created }
       else
         format.html { render :new }
-        format.json { render json: @template.errors, status: :unprocessable_entity }
+        format.json { render json: @type_racer.errors, status: :unprocessable_entity }
       end
     end
   end
 
   def update
-    @template = TypeRaces.find(params[:id])
-
+    @type_racer = TypeRaces.find(params[:id])
   end
 
   private

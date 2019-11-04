@@ -5,7 +5,7 @@
   </div>
 </div>
 
-<%= form_with(model:@template,local:true) do |form| %>
+<%= form_with(model:@type_racer,local:true) do |form| %>
   <div class="field">
     <%= form.text_area :text_area, id: :template_text, remote:true %>
     <span class ="match"> </span>
@@ -14,6 +14,7 @@
 <% end %>
 
 <button >Start</button>
+
 <div>
   <p>WPM : <span id="checkWpm"> 0 </span></p>
 </div>

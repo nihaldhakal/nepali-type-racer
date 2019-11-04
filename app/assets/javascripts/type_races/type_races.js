@@ -67,7 +67,7 @@ $(document).on("turbolinks:load", function () {
 });
 
 function arrayOfText() {
-debugger
+
     var textTemplate=$("#text").html();
     var textTemplateCharArray = textTemplate.split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
