@@ -25,14 +25,29 @@ var startTime;
 var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
-    displayRandomText();
+    arrayOfText();
 
     $("button").on("click",function () {
 
-        $('#userInput').focus();
-        $('#userInput').val("");
+        $('#template_text').focus();
+        $('#template_text').val("");
     });
-    $("#userInput").on("input",function(event){
+        $("#template_text").keyup(function () {
+        var text = $("#text").html();
+        var template_text =  $("#template_text").val();
+        $.ajax({
+            url: "/type_races/create",
+            type: "POST",
+            dataType: 'json',
+            data :{"text_area": template_text },
+            success: function (data,status,jqXHR) {
+            },
+            error: function () {
+
+            }
+        });
+    });
+    $("#template_text").on("input",function(event){
         if (startTime === undefined) {
             startTime = new Date($.now());
         }
@@ -51,17 +66,15 @@ $(document).on("turbolinks:load", function () {
     });
 });
 
-function displayRandomText() {
-
-    var randomText=$("#displayedText").text();
-    var randomIndex = Math.floor(Math.random()*quotes.length);
-    var randomText = quotes[randomIndex];
-    var randomTextCharArray = randomText.split("");
-    for(var spanCount=0; spanCount < randomTextCharArray.length; spanCount++) {
-        randomTextCharArray[spanCount] = '<span id= "'+spanCount +'">' + randomTextCharArray[spanCount] + '</span>';
+function arrayOfText() {
+debugger
+    var textTemplate=$("#text").html();
+    var textTemplateCharArray = textTemplate.split("");
+    for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
+        textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
     }
-    var randomTextSpanified = randomTextCharArray.join("");
-    $("#displayedText").html(randomTextSpanified);
+    var textTemplateSpanified = textTemplateCharArray.join("");
+    $("#text").html(textTemplateSpanified);
 }
 
 function updateWPM(){
@@ -78,11 +91,11 @@ function updateProgressBar(){
     var percentage = 3 + getProgress();
     var progressBarSelector = $("#newBar");
     var progressBar = $(progressBarSelector);
-    var displayedText = $('#displayedText').text();
-    var userInput = $('#userInput').val();
-    var currentCharIndex = userInput.length - 1;
-    for(var i = currentCharIndex; i <= displayedText.length - 1 ; i++) {
-        if (userInput[currentCharIndex] === displayedText[currentCharIndex]) {
+    var text = $('#text').text();
+    var template_text = $('#template_text').val();
+    var currentCharIndex = template_text.length - 1;
+    for(var i = currentCharIndex; i <= text.length - 1 ; i++) {
+        if (template_text[currentCharIndex] === text[currentCharIndex]) {
             $(progressBar).css("width", percentage + "%" );
             // $("#newBar").animate({left: "+=500"}, 2000);
         }
@@ -90,21 +103,21 @@ function updateProgressBar(){
 }
 function getProgress(){
 
-    var userInputLength = $("#userInput").val().length;
-    var quoteLength = $("#displayedText").text().length;
-    return ((userInputLength / quoteLength) * 100);
+    var template_textLength = $("#template_text").val().length;
+    var quoteLength = $("#text").text().length;
+    return ((template_textLength / quoteLength) * 100);
 }
 
 function giveColorFeedback(){
-    var displayedText = $('#displayedText').text();
-    var userInput = $('#userInput').val();
-    var currentCharIndex = userInput.length - 1;
+    var text = $('#text').text();
+    var template_text = $('#template_text').val();
+    var currentCharIndex = template_text.length - 1;
 
-    for(var i = currentCharIndex; i < displayedText.length - 1 ; i++){
+    for(var i = currentCharIndex; i < text.length - 1 ; i++){
         $("span #" + i).removeClass("match").removeClass("unmatch");
     }
 
-    if (userInput[currentCharIndex] === displayedText[currentCharIndex]){
+    if (template_text[currentCharIndex] === text[currentCharIndex]){
         $("span #" + currentCharIndex).addClass("match").removeClass("unmatch");
     } else {
         $("span #" + currentCharIndex).removeClass("match").addClass("unmatch");
@@ -112,7 +125,7 @@ function giveColorFeedback(){
 }
 
 function isGameOver(){
-    return ($('#displayedText').text()===$('#userInput').val())
+    return ($('#text').text()===$('#template_text').val())
 }
 
 function handleGameOver() {
@@ -121,15 +134,15 @@ function handleGameOver() {
 }
 
 function displayAccuracy() {
-    var displayedTextCharLen= $('#displayedText').text().length;
+    var textCharLen= $('#text').text().length;
     var userKeyPressInputCharLen=userKeyPressCount;
-    var accuracy = ( displayedTextCharLen/userKeyPressInputCharLen )*100;
+    var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
     $('#showAccuracy').removeClass("hidden");
     $(' #accuracy').text(accuracy);
 }
 function disableInput() {
-    $('#userInput').prop('disabled', true);
+    $('#template_text').prop('disabled', true);
 }
 
 
