@@ -32,7 +32,6 @@ class RaceTemplatesController < ApplicationController
 
 
   def update
-    debugger
     if @race.update_attributes(race_template_params)
       flash[:success] = "Text updated"
       redirect_to @race

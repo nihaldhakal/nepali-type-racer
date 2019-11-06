@@ -7,9 +7,7 @@ class TypeRacesController < ApplicationController
 
   def new
     @templates = RaceTemplate.all.sample
-    @type_racer = TypeRaces.new
-    # @template = TypeRaces.create(user: current_user)
-    # redirect_to type_races_edit_path(@template)
+    @type_race = TypeRaces.create(user: current_user)
   end
 
   def create
@@ -27,6 +25,9 @@ class TypeRacesController < ApplicationController
 
   def update
     @type_racer = TypeRaces.find(params[:id])
+    if @type_racer.update_column(:text_area, type_racer_params[:text_area])
+      head :ok
+    end
   end
 
   private
