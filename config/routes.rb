@@ -9,5 +9,8 @@ Rails.application.routes.draw do
   post 'type_races/create'
   put 'type_races/:id', to: 'type_races#update'
   resources :race_templates
+
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
+
