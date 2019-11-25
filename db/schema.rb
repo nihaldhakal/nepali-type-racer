@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191104065715) do
+ActiveRecord::Schema.define(version: 20191118095020) do
 
   create_table "race_templates", force: :cascade do |t|
     t.text "text"
@@ -27,6 +27,12 @@ ActiveRecord::Schema.define(version: 20191104065715) do
     t.integer "wpm"
     t.integer "user_id"
     t.integer "race_templates_id"
+    t.integer "status", default: 0
+  end
+
+  create_table "type_races_users", id: false, force: :cascade do |t|
+    t.integer "type_race_id", null: false
+    t.integer "user_id", null: false
   end
 
   create_table "users", force: :cascade do |t|

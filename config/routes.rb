@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   get 'type_races/index'
   root to: "type_races#index"
+  # get 'type_races/:id', to: 'type_races#show', as: 'type_race'
   get 'type_races/new'
   post 'type_races/create'
   put 'type_races/:id', to: 'type_races#update'

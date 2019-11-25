@@ -26,25 +26,30 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
-
     $("button").on("click",function () {
-
         $('#template_text').focus();
         $('#template_text').val("");
     });
-        $("#template_text").keyup(function () {
-        var text = $("#text").html();
+    $("#template_text").keyup(function () {
+        var text = $("#text").text();
         var text_id = $("#text_id").val();
         var template_text =  $("#template_text").val();
+
         $.ajax({
             url: "/type_races/"+text_id,
             type: "PUT",
             dataType: 'json',
             data :{"text_area": template_text },
             success: function (data,status,jqXHR) {
+                giveColorFeedback(text,template_text);
+                updateProgressBar(text,template_text);
+                updateWPM();
+
+                if (isGameOver() == true){
+                    handleGameOver();
+                }
             },
             error: function () {
-
             }
         });
     });
@@ -58,18 +63,12 @@ $(document).on("turbolinks:load", function () {
             userKeyPressCount++;
         }
 
-        updateWPM();
-        updateProgressBar();
-        giveColorFeedback();
-        if (isGameOver() == true){
-            handleGameOver();
-        }
+
     });
 });
 
 function arrayOfText() {
-
-    var textTemplate=$("#text").html();
+    var textTemplate=$("#text").text();
     var textTemplateCharArray = textTemplate.split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
         textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
@@ -88,12 +87,12 @@ function updateWPM(){
     wpm = parseInt(wpm,10);
     $('#checkWpm').text(wpm);
 }
-function updateProgressBar(){
+function updateProgressBar(text,template_text){
     var percentage = 3 + getProgress();
     var progressBarSelector = $("#newBar");
     var progressBar = $(progressBarSelector);
-    var text = $('#text').text();
-    var template_text = $('#template_text').val();
+    // var text = $('#text').text();
+    // var template_text = $('#template_text').val();
     var currentCharIndex = template_text.length - 1;
     for(var i = currentCharIndex; i <= text.length - 1 ; i++) {
         if (template_text[currentCharIndex] === text[currentCharIndex]) {
@@ -103,30 +102,33 @@ function updateProgressBar(){
     }
 }
 function getProgress(){
-
-    var template_textLength = $("#template_text").val().length;
-    var quoteLength = $("#text").text().length;
-    return ((template_textLength / quoteLength) * 100);
+    var template_text_length = $("#template_text").val().length;
+    var quote_length = $("#text").text().length;
+    return ((template_text_length / quote_length) * 100);
 }
 
-function giveColorFeedback(){
-    var text = $('#text').text();
-    var template_text = $('#template_text').val();
-    var currentCharIndex = template_text.length - 1;
+function giveColorFeedback(text,template_text){
 
-    for(var i = currentCharIndex; i < text.length - 1 ; i++){
-        $("span #" + i).removeClass("match").removeClass("unmatch");
+    let currentCharIndex = 0 ;
+
+    for(let i = currentCharIndex; i < text.length  ; i++){
+        $("span #" + i).removeClass("match unmatch");
+    }
+    for (let i= currentCharIndex; i<template_text.length; i++){
+        // console.log(template_text + " vs " + text);
+        // console.log(template_text[i] + " vs " + text[i]);
+        if (template_text[i] == text[i]){
+            $("span #" + i).addClass("match").removeClass("unmatch");
+            // console.log($("span #" + i));
+        } else {
+            $("span #"  + i).removeClass("match").addClass("unmatch");
+        }
     }
 
-    if (template_text[currentCharIndex] === text[currentCharIndex]){
-        $("span #" + currentCharIndex).addClass("match").removeClass("unmatch");
-    } else {
-        $("span #" + currentCharIndex).removeClass("match").addClass("unmatch");
-    }
 }
 
 function isGameOver(){
-    return ($('#text').text()===$('#template_text').val())
+    return ($('#text').text()===$('#template_text').val());
 }
 
 function handleGameOver() {
