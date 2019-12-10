@@ -7,11 +7,11 @@ class TypeRacesController < ApplicationController
 
   # def new
   #   @templates = RaceTemplate.all.sample
-  #   @type_race = TypeRaces.create(user_id: current_user)
+  #   @type_race = TypeRace.create(user_id: current_user)
   # end
   #
   # def create
-  #   @type_racer = TypeRaces.new(type_racer_params)
+  #   @type_racer = TypeRace.new(type_racer_params)
   #   respond_to do |format|
   #     if @type_racer.save
   #       format.html { redirect_to  @type_racer, notice: 'Text was successfully created.'}
@@ -26,8 +26,8 @@ class TypeRacesController < ApplicationController
 
   def show
     @templates = RaceTemplate.all.sample
-    @type_race = TypeRaces.create(user_id: current_user)
-    user_count =  TypeRaces.find(User.count)
+    @type_race = TypeRace.create(user_id: current_user)
+    user_count =  TypeRace.find(User.count)
     if time_count== false && user_count >1
       create_or_join
     else
@@ -37,7 +37,7 @@ class TypeRacesController < ApplicationController
 
   def create_or_join
     debugger
-    pending_race = TypeRaces.pending.last
+    pending_race = TypeRace.pending.last
     if pending_race
       # if time_count == true
       #   join_race # use if additional logic needed
@@ -47,7 +47,7 @@ class TypeRacesController < ApplicationController
       #   create
       # end
     else
-      type_race = TypeRaces.create(type_racer_params )
+      type_race = TypeRace.create(type_racer_params )
       type_race.users.add(current_user)
       # create
     end
@@ -55,7 +55,7 @@ class TypeRacesController < ApplicationController
   end
 
   def update
-    @type_racer = TypeRaces.find(params[:id])
+    @type_racer = TypeRace.find(params[:id])
     respond_to do |format|
       if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
         format.json { render json: { text: @type_racer.text_area}, status: :ok}

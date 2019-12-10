@@ -1,4 +1,4 @@
-class TypeRaces < ApplicationRecord
+class TypeRace < ApplicationRecord
   belongs_to :race_templates, optional:true
   has_and_belongs_to_many :users
   enum status: [:pending,:completed,:ongoing]
