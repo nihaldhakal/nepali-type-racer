@@ -4,8 +4,7 @@
 <% end %>
 
 <% if current_user.present?  && current_user.has_roles?(:user)  %>
-
-
+  
 <%= link_to 'Type Race', type_races_new_path %>
 <% end %>
 

@@ -5,39 +5,61 @@ class TypeRacesController < ApplicationController
 
   end
 
-  def new
+  # def new
+  #   @templates = RaceTemplate.all.sample
+  #   @type_race = TypeRaces.create(user_id: current_user)
+  # end
+  #
+  # def create
+  #   @type_racer = TypeRaces.new(type_racer_params)
+  #   respond_to do |format|
+  #     if @type_racer.save
+  #       format.html { redirect_to  @type_racer, notice: 'Text was successfully created.'}
+  #
+  #       format.json { render json: { text: @type_racer.text_area}, status: :created }
+  #     else
+  #       format.html { render :new }
+  #       format.json { render json: @type_racer.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+
+  def show
     @templates = RaceTemplate.all.sample
     @type_race = TypeRaces.create(user_id: current_user)
-  end
+    user_count =  TypeRaces.find(User.count)
+    if time_count== false && user_count >1
+      create_or_join
+    else
 
-  def create
-    @type_racer = TypeRaces.new(type_racer_params)
-    respond_to do |format|
-      if @type_racer.save
-        format.html { redirect_to  @type_racer, notice: 'Text was successfully created.'}
-
-        format.json { render json: { text: @type_racer.text_area}, status: :created }
-      else
-        format.html { render :new }
-        format.json { render json: @type_racer.errors, status: :unprocessable_entity }
-      end
     end
   end
 
-  def start_or_join
-    @type_racer = TypeRaces.find(params[:id])
-    if @type_racer.pending?
-      if time_counting > 3
-      end
+  def create_or_join
+    debugger
+    pending_race = TypeRaces.pending.last
+    if pending_race
+      # if time_count == true
+      #   join_race # use if additional logic needed
+      pending_race.users.add(current_user)
+      type_race = pending_race
+      # else
+      #   create
+      # end
+    else
+      type_race = TypeRaces.create(type_racer_params )
+      type_race.users.add(current_user)
+      # create
     end
+    redirect_to type_race
   end
 
   def update
     @type_racer = TypeRaces.find(params[:id])
     respond_to do |format|
-    if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
-      format.json { render json: { text: @type_racer.text_area}, status: :ok}
-    end
+      if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
+        format.json { render json: { text: @type_racer.text_area}, status: :ok}
+      end
     end
   end
 
@@ -47,15 +69,17 @@ class TypeRacesController < ApplicationController
     params.permit(:text_area, :wpm, :id, :status)
   end
 
-  def time_counting
+  def time_count
     time_count_in_seconds = 0
     10.downto(0) do |index|
-      puts index
       sleep 1
       time_count_in_seconds =index
+      if time_count_in_seconds > 3
+        return true
+      end
     end
-    return time_count_in_seconds
   end
+
 
 end
 
