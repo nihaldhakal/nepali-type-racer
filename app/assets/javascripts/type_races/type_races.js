@@ -41,6 +41,7 @@ $(document).on("turbolinks:load", function () {
             dataType: 'json',
             data :{"text_area": template_text },
             success: function (data,status,jqXHR) {
+                console.log("Test");
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);
                 updateWPM();

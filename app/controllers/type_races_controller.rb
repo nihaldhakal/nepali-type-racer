@@ -24,16 +24,10 @@ class TypeRacesController < ApplicationController
   #   end
   # end
 
-  def show
-    @templates = RaceTemplate.all.sample
-    @type_race = TypeRace.create(user_id: current_user)
-    user_count =  TypeRace.find(User.count)
-    if time_count== false && user_count >1
-      create_or_join
-    else
-
-    end
-  end
+  # def show
+  #   @templates = RaceTemplate.all.sample
+  #   @type_race = TypeRace.create(users: [current_user])
+  # end
 
   def create_or_join
     debugger
@@ -41,16 +35,15 @@ class TypeRacesController < ApplicationController
     if pending_race
       # if time_count == true
       #   join_race # use if additional logic needed
-      pending_race.users.add(current_user)
       type_race = pending_race
       # else
       #   create
       # end
     else
       type_race = TypeRace.create(type_racer_params )
-      type_race.users.add(current_user)
       # create
     end
+    type_race.users<<User.last
     redirect_to type_race
   end
 
@@ -70,11 +63,11 @@ class TypeRacesController < ApplicationController
   end
 
   def time_count
-    time_count_in_seconds = 0
+    # time_count_in_seconds = 0
     10.downto(0) do |index|
       sleep 1
-      time_count_in_seconds =index
-      if time_count_in_seconds > 3
+      # time_count_in_seconds =index
+      if index > 3
         return true
       end
     end
