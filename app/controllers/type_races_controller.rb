@@ -29,9 +29,23 @@ class TypeRacesController < ApplicationController
   #   @type_race = TypeRace.create(users: [current_user])
   # end
 
+
+
+  def start_or_join_request
+    @type_race = TypeRaces.create(user_id: current_user)
+    user_count =  TypeRaces.find(User.count)
+    if time_count== false && user_count >=1
+      create_or_join
+    else
+      update
+      start_or_join_request
+    end
+  end
+
   def create_or_join
-    debugger
-    pending_race = TypeRace.pending.last
+    # debugger
+    pending_race = TypeRaces.pending.last
+
     if pending_race
       # if time_count == true
       #   join_race # use if additional logic needed
