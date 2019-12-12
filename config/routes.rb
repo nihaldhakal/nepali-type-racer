@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post 'type_races/create_or_join', to: 'type_races#create_or_join'
   get 'type_races/index'
   root to: "type_races#index"
-  # get 'type_races/:id', to: 'type_races#show', as: 'type_race'
+  get 'type_races/:id', to: 'type_races#show', as: 'type_race'
   # post 'type_races/create'
   put 'type_races/:id', to: 'type_races#update'
   resources :race_templates
