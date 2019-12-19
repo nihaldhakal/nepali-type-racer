@@ -30,6 +30,19 @@ $(document).on("turbolinks:load", function () {
         $('#template_text').focus();
         $('#template_text').val("");
     });
+
+    // $("#typeRaceButton").on ("click",function () {
+    //     $.ajax({
+    //         url: "type_races/create_or_join",
+    //         type: "POST",
+    //         dataType: "json",
+    //         data: {   },
+    //         success:function (data,status,jqXHR) {
+    //
+    //         }
+    //     })
+    // });
+
     $("#template_text").keyup(function () {
         var text = $("#text").text();
         var text_id = $("#text_id").val();
@@ -39,9 +52,11 @@ $(document).on("turbolinks:load", function () {
             url: "/type_races/"+text_id,
             type: "PUT",
             dataType: 'json',
+            // contentType: "application/json",
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            crossOrigin: true,
             data :{"text_area": template_text },
             success: function (data,status,jqXHR) {
-
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);
                 updateWPM();

@@ -26,7 +26,7 @@ class TypeRacesController < ApplicationController
 
   def show
     @templates = RaceTemplate.all.sample
-    @type_race = TypeRace.create(users: [current_user])
+    @type_race = TypeRace.find(params[:id])
   end
 
 
@@ -44,7 +44,6 @@ class TypeRacesController < ApplicationController
 
   def create_or_join
     pending_race = TypeRace.pending.last
-
     # if pending_race && pending_race.time_remaining?
       if pending_race
       # if time_count == true

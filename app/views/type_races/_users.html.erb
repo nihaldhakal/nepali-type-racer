@@ -1,0 +1,19 @@
+
+<table class="table table-striped table-bordered">
+  <thead >
+  <tr>
+    <th >email</th>
+    <th>fname</th>
+    <th colspan="2"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <div class="users">
+    <% @type_race.users.each do |user| %>
+      <tr>
+        <td> <%= user.email %> </td>
+      </tr>
+    <% end %>
+  </div>
+  </tbody>
+</table>

@@ -5,12 +5,12 @@
 
 <% if current_user.present?  && current_user.has_roles?(:user)  %>
   
-<%= link_to 'Type Race', type_races_create_or_join_path, method: :post %>
+<%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
 <% end %>
 
 
 <%if current_user.present? == false %>
-  <%= link_to 'Type Race', type_races_create_or_join_path, method: :post %>
+  <%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
 
 
   <!--  <table class="table table-striped table-bordered">-->
