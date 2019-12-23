@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191218114808) do
+ActiveRecord::Schema.define(version: 20191219063326) do
 
   create_table "race_templates", force: :cascade do |t|
     t.text "text"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20191218114808) do
     t.string "roles"
     t.string "first_name"
     t.string "last_name"
+    t.string "user_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

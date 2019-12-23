@@ -26,22 +26,24 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
+    var text_id = $("#text_id").val();
     $("button").on("click",function () {
         $('#template_text').focus();
         $('#template_text').val("");
     });
 
-    // $("#typeRaceButton").on ("click",function () {
+    // setInterval(function () {
     //     $.ajax({
-    //         url: "type_races/create_or_join",
+    //         url: "",
     //         type: "POST",
     //         dataType: "json",
-    //         data: {   },
+    //         data: {"type_race_id":   },
     //         success:function (data,status,jqXHR) {
     //
     //         }
-    //     })
-    // });
+    //     });
+    // },1000);
+
 
     $("#template_text").keyup(function () {
         var text = $("#text").text();

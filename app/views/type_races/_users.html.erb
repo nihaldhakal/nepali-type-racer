@@ -1,17 +1,20 @@
-
 <table class="table table-striped table-bordered">
   <thead >
   <tr>
-    <th >email</th>
-    <th>fname</th>
-    <th colspan="2"></th>
+    <th> User Name</th>
+    <th >Email</th>
+    <th>First Name</th>
+    <th>Last Name</th>
   </tr>
   </thead>
-  <tbody>
-  <div class="users">
+  <div class="users" id="hidden">
+    <tbody >
     <% @type_race.users.each do |user| %>
       <tr>
-        <td> <%= user.email %> </td>
+        <td id="userName"> <%= user.user_name %></td>
+        <td id="userEmail"> <%= user.email %> </td>
+        <td id="userFirstName"> <%=  user.first_name %></td>
+        <td id="userLastName">  <%= user.last_name %></td>
       </tr>
     <% end %>
   </div>

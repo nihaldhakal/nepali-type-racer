@@ -40,7 +40,7 @@ class TypeRacesController < ApplicationController
       update
       start_or_join_request
     end
-  end
+  end 
 
   def create_or_join
     pending_race = TypeRace.pending.last
@@ -60,7 +60,7 @@ class TypeRacesController < ApplicationController
     redirect_to type_race
   end
 
-  def poll
+  def poll(race_status)
 
   end
 
