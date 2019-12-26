@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191219063326) do
+ActiveRecord::Schema.define(version: 20191224080142) do
 
   create_table "race_templates", force: :cascade do |t|
     t.text "text"
@@ -19,20 +19,23 @@ ActiveRecord::Schema.define(version: 20191219063326) do
     t.boolean "is_published"
   end
 
+  create_table "type_race_stats", force: :cascade do |t|
+    t.integer "type_race_id"
+    t.integer "user_id"
+    t.integer "wpm"
+    t.text "progress"
+    t.integer "accuracy"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "type_races", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "description"
-    t.text "text_area"
-    t.integer "wpm"
-    t.integer "user_id"
     t.integer "race_templates_id"
     t.integer "status", default: 0
-  end
-
-  create_table "type_races_users", id: false, force: :cascade do |t|
-    t.integer "type_race_id", null: false
-    t.integer "user_id", null: false
+    t.integer "user_1_id"
+    t.integer "user_2_id"
   end
 
   create_table "users", force: :cascade do |t|

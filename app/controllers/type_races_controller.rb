@@ -40,28 +40,31 @@ class TypeRacesController < ApplicationController
       update
       start_or_join_request
     end
-  end 
+  end
 
   def create_or_join
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
-      if pending_race
+    if pending_race
       # if time_count == true
       #   join_race # use if additional logic needed
-      type_race = pending_race
+      pending_race.update(user_2_id: current_user.id, status: "ongoing")
       # else
       #   create
       # end
+      redirect_to type_race_path(pending_race)
     else
-      type_race = TypeRace.create(type_racer_params )
-      # create
+      type_race = TypeRace.create(user_1_id: current_user.id)
+      redirect_to type_race_path(type_race)
     end
-    type_race.users << User.last
-    redirect_to type_race
   end
 
-  def poll(race_status)
-
+  def poll
+    type_race = TypeRace.find(params[:id])
+    return if type_race.nil?
+    if type_race.status == "ongoing"
+      redirect_to type_race_path(type_race)
+    end
   end
 
   def update
@@ -75,9 +78,9 @@ class TypeRacesController < ApplicationController
 
   private
 
-  def  type_racer_params
-    params.permit(:text_area, :wpm, :id, :status)
-  end
+  # def  type_racer_params
+  #   params.permit( :status,:user_1_id, :user_2_id)
+  # end
 
   def time_count
     # time_count_in_seconds = 0
@@ -89,7 +92,6 @@ class TypeRacesController < ApplicationController
       end
     end
   end
-
 
 end
 

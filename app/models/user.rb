@@ -15,5 +15,6 @@ class User < ApplicationRecord
   validates :last_name, presence: true
   validates :user_name, presence: true
 
-  has_and_belongs_to_many :type_races
+  has_many :type_race_stats
+  has_many :type_races
 end

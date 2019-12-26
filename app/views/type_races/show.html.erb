@@ -1,3 +1,8 @@
 <%= render 'users' %>
-<%= render 'form', template:@template %>
+<%= hidden_field_tag :current_id, params[:id] %>
+<% if @type_race.status == "pending" %>
+  <%= render 'waiting' %>
+<%else %>
+  <%= render 'found' %>
+<%end %>
 <%= link_to 'Back' , type_races_index_path %>

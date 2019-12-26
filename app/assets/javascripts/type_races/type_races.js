@@ -32,17 +32,21 @@ $(document).on("turbolinks:load", function () {
         $('#template_text').val("");
     });
 
-    // setInterval(function () {
-    //     $.ajax({
-    //         url: "",
-    //         type: "POST",
-    //         dataType: "json",
-    //         data: {"type_race_id":   },
-    //         success:function (data,status,jqXHR) {
-    //
-    //         }
-    //     });
-    // },1000);
+    if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
+    {
+        setInterval(function () {
+            console.log($('#current_id').val());
+            $.ajax({
+                url: "/type_races/poll/" + $('#current_id').val(),
+                type: "GET",
+                dataType: "json",
+                data: {},
+                success:function (data,status,jqXHR) {
+                    console.log("hello");
+                }
+            });
+        },3000);
+    }
 
 
     $("#template_text").keyup(function () {
@@ -57,7 +61,7 @@ $(document).on("turbolinks:load", function () {
             // contentType: "application/json",
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             crossOrigin: true,
-            data :{"text_area": template_text },
+            data :{"progress": template_text },
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);

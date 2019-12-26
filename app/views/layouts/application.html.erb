@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Nepalityperacer</title>
-    <%= csrf_meta_tags %>
+<head>
+  <title>Nepalityperacer</title>
+  <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application'%>
-  </head>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application'%>
+</head>
 
-  <body>
+<!--  <body data-controller="<%#= controller_name %>" data-action="<%#= action_name%>">-->
+
+<%= content_tag :body, data: { action: action_name, controller: controller_name } do %>
+
   <div class="navbar navbar-nav navbar-right">
     <% if user_signed_in? %>
       <li><%= link_to "Logged in as #{current_user.email}", root_path,  class: "active" %></li>
@@ -25,4 +28,5 @@
     <%= yield %>
   </div>
   </body>
+<%end %>
 </html>
