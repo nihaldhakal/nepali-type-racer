@@ -25,8 +25,11 @@ class TypeRacesController < ApplicationController
   # end
 
   def show
-    @templates = RaceTemplate.all.sample
+    #Get template_id same as race_template_id
+    # @templates = RaceTemplate.find_by(params[:template])
+    # Used in show template.
     @type_race = TypeRace.find(params[:id])
+    @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
   end
 
 
@@ -43,18 +46,16 @@ class TypeRacesController < ApplicationController
   end
 
   def create_or_join
+    templates = RaceTemplate.all.sample.id
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
     if pending_race
       # if time_count == true
       #   join_race # use if additional logic needed
       pending_race.update(user_2_id: current_user.id, status: "ongoing")
-      # else
-      #   create
-      # end
       redirect_to type_race_path(pending_race)
     else
-      type_race = TypeRace.create(user_1_id: current_user.id)
+      type_race = TypeRace.create(user_1_id: current_user.id, race_templates_id: templates)
       redirect_to type_race_path(type_race)
     end
   end
