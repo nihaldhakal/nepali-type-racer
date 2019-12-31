@@ -42,7 +42,7 @@ $(document).on("turbolinks:load", function () {
                 dataType: "json",
                 data: {},
                 success:function (data,status,jqXHR) {
-                    console.log("hello");
+                    location.reload();
                 }
             });
         },3000);
