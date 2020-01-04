@@ -31,22 +31,22 @@ $(document).on("turbolinks:load", function () {
         $('#template_text').focus();
         $('#template_text').val("");
     });
-
-    if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
-    {
-        setInterval(function () {
-            console.log($('#current_id').val());
-            $.ajax({
-                url: "/type_races/poll/" + $('#current_id').val(),
-                type: "GET",
-                dataType: "json",
-                data: {},
-                success:function (data,status,jqXHR) {
-                    location.reload();
-                }
-            });
-        },3000);
-    }
+    //
+    // if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
+    // {
+    //     setInterval(function () {
+    //         console.log($('#current_id').val());
+    //         $.ajax({
+    //             url: "/type_races/poll/" + $('#current_id').val(),
+    //             type: "GET",
+    //             dataType: "json",
+    //             data: {},
+    //             success:function (data,status,jqXHR) {
+    //                 location.reload();
+    //             }
+    //         });
+    //     },3000);
+    // }
 
 
     $("#template_text").keyup(function () {

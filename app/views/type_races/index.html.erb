@@ -4,16 +4,14 @@
 <% end %>
 
 <% if current_user.present?  && current_user.has_roles?(:user)  %>
-  
-<%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
+  <%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
+<% else %>
+  <li><%= link_to("Sign In", new_user_session_path, class: "active")%></li>
+  <li><%= link_to "Sign Up", new_user_registration_path, class: "active" %></li>
 <% end %>
 
 
-<%if current_user.present? == false %>
-  <%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
-
-
-  <!--  <table class="table table-striped table-bordered">-->
+<!--  <table class="table table-striped table-bordered">-->
 <!--    <thead >-->
 <!--    <tr>-->
 <!--      <th scope="colgroup">Text</th>-->
@@ -21,14 +19,14 @@
 <!--    </thead>-->
 <!--    <tbody>-->
 <!--    <tr>-->
-      <%# debugger %>
+<%# debugger %>
 <!--      <td id="text"> <%#= @templates.text %> </td>-->
 <!--      <td>-->
-        <%#= form_with(model:@template,local:true) do |form| %>
+<%#= form_with(model:@template,local:true) do |form| %>
 <!--          <div class="field">-->
-            <%#= form.text_area :text_area, id: :template_text, remote:true %>
+<%#= form.text_area :text_area, id: :template_text, remote:true %>
 <!--          </div>-->
-        <%# end %>
+<%# end %>
 <!--      </td>-->
 <!--    </tr>-->
 <!--    </tbody>-->
@@ -37,9 +35,9 @@
 
 
 
-  <!--<div id = "barProgress">-->
+<!--<div id = "barProgress">-->
 <!--  <div id="newBar">-->
-    <%#=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
+<%#=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
 <!--  </div>-->
 
 <!--</div>-->
@@ -61,5 +59,5 @@
 <!--    <p >Accuracy : <span id="accuracy"> 0 </span></p>-->
 <!--  </div>-->
 
-<% end %>
+
 

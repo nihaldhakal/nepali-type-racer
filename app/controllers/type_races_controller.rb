@@ -2,7 +2,11 @@ class TypeRacesController < ApplicationController
   # access all: [:show, :index], user: {except: [:destroy]}, company_admin: :all
 
   def index
-
+    @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
+    unless @type_race.nil?
+      @type_race.update_attribute(:status ,"canceled")
+      destroy_race
+    end
   end
 
   # def new
@@ -48,13 +52,16 @@ class TypeRacesController < ApplicationController
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
     if pending_race
+      # if pending_race.user_1_id == current_user.id || pending_race.user_1_id == nil
       if pending_race.user_1_id == current_user.id
-        render html: '<div> Error</div>'
+        # debugger
+        pending_race.update(status: "canceled")
+      else
+        pending_race.update(user_2_id: current_user.id, status: "ongoing")
+        redirect_to type_race_path(pending_race)
       end
       # if time_count == true
       #   join_race # use if additional logic needed
-      pending_race.update(user_2_id: current_user.id, status: "ongoing")
-      redirect_to type_race_path(pending_race)
     else
       type_race = TypeRace.create(user_1_id: current_user.id, user_2_id: nil, race_templates_id: templates)
       redirect_to type_race_path(type_race)
@@ -69,14 +76,19 @@ class TypeRacesController < ApplicationController
     end
   end
 
-  def update
-    @type_racer = TypeRace.find(params[:id])
-    respond_to do |format|
-      if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
-        format.json { render json: { text: @type_racer.text_area}, status: :ok}
-      end
+  def destroy_race
+    if @type_race.status == "canceled"
+      @type_race.destroy
     end
   end
+  # def update
+  #   @type_racer = TypeRace.find(params[:id])
+  #   respond_to do |format|
+  #     if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
+  #       format.json { render json: { text: @type_racer.text_area}, status: :ok}
+  #     end
+  #   end
+  # end
 
   private
 
@@ -94,6 +106,5 @@ class TypeRacesController < ApplicationController
       end
     end
   end
-
 end
 
