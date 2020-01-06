@@ -2,11 +2,12 @@ class TypeRacesController < ApplicationController
   # access all: [:show, :index], user: {except: [:destroy]}, company_admin: :all
 
   def index
-    if user_logged_in? && params[:status] == "canceled"
-      debugger
-      @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
-      # @type_race.update_attribute(:status ,"canceled")
-      @type_race.destroy
+    @type_race = TypeRace.last
+    if @type_race.user_1_id.nil? or @type_race.user_2_id.nil?
+      @type_race.update_attribute(:status ,"canceled")
+      if user_logged_in? && @type_race.canceled?
+        destroy_race
+      end
     end
   end
 
@@ -32,7 +33,6 @@ class TypeRacesController < ApplicationController
   def show
     #Get template_id same as race_template_id
     # @templates = RaceTemplate.find_by(params[:template])
-    # Used in show template.
     @type_race = TypeRace.find(params[:id])
     @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
   end
@@ -53,14 +53,8 @@ class TypeRacesController < ApplicationController
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
     if pending_race
-      # if pending_race.user_1_id == current_user.id || pending_race.user_1_id == nil
-      if pending_race.user_1_id == current_user.id
-        # debugger
-        pending_race.update(status: "canceled")
-      else
-        pending_race.update(user_2_id: current_user.id, status: "ongoing")
-        redirect_to type_race_path(pending_race)
-      end
+      pending_race.update(user_2_id: current_user.id, status: "ongoing")
+      redirect_to type_race_path(pending_race)
       # if time_count == true
       #   join_race # use if additional logic needed
     else
@@ -77,22 +71,6 @@ class TypeRacesController < ApplicationController
     end
   end
 
-  def on_status_canceled
-    # if user_logged_in? && params[:status] == "canceled"
-    #   debugger
-    #   @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
-    #   # @type_race.update_attribute(:status ,"canceled")
-    #   @type_race.destroy
-    # end
-  end
-
-  # def destroy_race
-  #   if @type_race.status == "canceled"
-  #     @type_race.destroy
-  #   end
-  # end
-
-
   # def update
   #   @type_racer = TypeRace.find(params[:id])
   #   respond_to do |format|
@@ -104,9 +82,11 @@ class TypeRacesController < ApplicationController
 
   private
 
-  # def  type_racer_params
-  #   params.permit( :status,:user_1_id, :user_2_id)
-  # end
+  def destroy_race
+    if @type_race.status == "canceled"
+      @type_race.destroy
+    end
+  end
 
   def time_count
     # time_count_in_seconds = 0

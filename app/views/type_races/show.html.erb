@@ -3,6 +3,6 @@
 <% if @type_race.status == "pending" %>
   <%= render 'waiting' %>
 <%else %>
-  <%= render 'found' %>
+  <%= render 'found', template: @templates %>
 <%end %>
 <%= link_to 'Back' , type_races_index_path%>
