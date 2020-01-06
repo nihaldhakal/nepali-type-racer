@@ -2,10 +2,11 @@ class TypeRacesController < ApplicationController
   # access all: [:show, :index], user: {except: [:destroy]}, company_admin: :all
 
   def index
-    @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
-    unless @type_race.nil?
-      @type_race.update_attribute(:status ,"canceled")
-      destroy_race
+    if user_logged_in? && params[:status] == "canceled"
+      debugger
+      @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
+      # @type_race.update_attribute(:status ,"canceled")
+      @type_race.destroy
     end
   end
 
@@ -76,11 +77,22 @@ class TypeRacesController < ApplicationController
     end
   end
 
-  def destroy_race
-    if @type_race.status == "canceled"
-      @type_race.destroy
-    end
+  def on_status_canceled
+    # if user_logged_in? && params[:status] == "canceled"
+    #   debugger
+    #   @type_race = TypeRace.where("user_1_id= #{current_user.id} or user_2_id=#{current_user.id}").last
+    #   # @type_race.update_attribute(:status ,"canceled")
+    #   @type_race.destroy
+    # end
   end
+
+  # def destroy_race
+  #   if @type_race.status == "canceled"
+  #     @type_race.destroy
+  #   end
+  # end
+
+
   # def update
   #   @type_racer = TypeRace.find(params[:id])
   #   respond_to do |format|
