@@ -11,25 +11,6 @@ class TypeRacesController < ApplicationController
     end
   end
 
-  # def new
-  #   @templates = RaceTemplate.all.sample
-  #   @type_race = TypeRace.create(user_id: current_user)
-  # end
-  #
-  # def create
-  #   @type_racer = TypeRace.new(type_racer_params)
-  #   respond_to do |format|
-  #     if @type_racer.save
-  #       format.html { redirect_to  @type_racer, notice: 'Text was successfully created.'}
-  #
-  #       format.json { render json: { text: @type_racer.text_area}, status: :created }
-  #     else
-  #       format.html { render :new }
-  #       format.json { render json: @type_racer.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
   def show
     #Get template_id same as race_template_id
     # @templates = RaceTemplate.find_by(params[:template])
@@ -37,16 +18,16 @@ class TypeRacesController < ApplicationController
     @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
   end
 
-  def start_or_join_request
-    @type_race = TypeRace.create(user_id: current_user)
-    user_count =  TypeRace.find(User.count)
-    if time_count== false && user_count >=1
-      create_or_join
-    else
-      update
-      start_or_join_request
-    end
-  end
+  # def start_or_join_request
+  #   @type_race = TypeRace.create(user_id: current_user)
+  #   user_count =  TypeRace.find(User.count)
+  #   if time_count== false && user_count >=1
+  #     create_or_join
+  #   else
+  #     update
+  #     start_or_join_request
+  #   end
+  # end
 
   def create_or_join
     templates = RaceTemplate.all.sample.id
@@ -70,15 +51,6 @@ class TypeRacesController < ApplicationController
       redirect_to type_race_path(type_race)
     end
   end
-
-  # def update
-  #   @type_racer = TypeRace.find(params[:id])
-  #   respond_to do |format|
-  #     if @type_racer.update_attribute(:text_area, type_racer_params[:text_area])
-  #       format.json { render json: { text: @type_racer.text_area}, status: :ok}
-  #     end
-  #   end
-  # end
 
   private
 
