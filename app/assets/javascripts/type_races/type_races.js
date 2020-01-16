@@ -55,7 +55,9 @@ $(document).on("turbolinks:load", function () {
         var text = $("#text").text();
         var template_text =  $(".template_text").val();
         var user_id = $("field").data('user-id');
-
+        var data= {"text":template_text,"user_id": user_id}
+        data["user_1_progress"] =  $('#type_race_user_1_progress').val();
+        data["user_2_progress"] =  $('#type_race_user_2_progress').val();
         $.ajax({
             url: "/type_races/poll/"+text_id,
             type: "PUT",
@@ -63,7 +65,7 @@ $(document).on("turbolinks:load", function () {
             // contentType: "application/json",
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             crossOrigin: true,
-            data :  {"text":template_text,"user_id": user_id, "user_1_progress": $('#type_race_user_1_progress').val(), "user_2_progress": $('#type_race_user_2_progress').val()  } ,
+            data :  data ,
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);
