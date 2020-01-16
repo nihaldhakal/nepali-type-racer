@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :users
   post 'type_races/create_or_join', to: 'type_races#create_or_join'
   get 'type_races/index'
-  get 'type_races/poll/:id', to:'type_races#poll'
+  put 'type_races/poll/:id', to:'type_races#poll'
   root to: "type_races#index"
   get 'type_races/:id', to: 'type_races#show', as: 'type_race'
   # post 'type_races/create'

@@ -27,9 +27,11 @@ var userKeyPressCount=0;
 $(document).on("turbolinks:load", function () {
     arrayOfText();
     var text_id = $("#text_id").val();
+    // var template_text_1_id = $("#template_text_1").val();
+    // var template_text_2_id = $("#template_text_2").val();
     $("button").on("click",function () {
-        $('#template_text').focus();
-        $('#template_text').val("");
+        $('.template_text').focus();
+        $('.template_text').val("");
     });
     //
     // if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
@@ -49,33 +51,35 @@ $(document).on("turbolinks:load", function () {
     // }
 
 
-    $("#template_text").keyup(function () {
+    $(".template_text").keyup(function () {
         var text = $("#text").text();
-        var text_id = $("#text_id").val();
-        var template_text =  $("#template_text").val();
+        var template_text =  $(".template_text").val();
+        var user_id = $("field").data('user-id');
 
         $.ajax({
-            url: "/type_races/"+text_id,
+            url: "/type_races/poll/"+text_id,
             type: "PUT",
             dataType: 'json',
             // contentType: "application/json",
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             crossOrigin: true,
-            data :{"progress": template_text },
+            data :  {"text":template_text,"user_id": user_id, "user_1_progress": $('#type_race_user_1_progress').val(), "user_2_progress": $('#type_race_user_2_progress').val()  } ,
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);
                 updateWPM();
-
                 if (isGameOver() == true){
                     handleGameOver();
                 }
             },
-            error: function () {
+            error: function (a,b,c) {
+            },
+            complete: function () {
+                console.log("Completed");
             }
         });
     });
-    $("#template_text").on("input",function(event){
+    $(".template_text").on("input",function(event){
         if (startTime === undefined) {
             startTime = new Date($.now());
         }
@@ -84,8 +88,6 @@ $(document).on("turbolinks:load", function () {
         if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
             userKeyPressCount++;
         }
-
-
     });
 });
 
@@ -114,7 +116,7 @@ function updateProgressBar(text,template_text){
     var progressBarSelector = $("#newBar");
     var progressBar = $(progressBarSelector);
     // var text = $('#text').text();
-    // var template_text = $('#template_text').val();
+    // var template_text = $('.template_text').val();
     var currentCharIndex = template_text.length - 1;
     for(var i = currentCharIndex; i <= text.length - 1 ; i++) {
         if (template_text[currentCharIndex] === text[currentCharIndex]) {
@@ -124,7 +126,7 @@ function updateProgressBar(text,template_text){
     }
 }
 function getProgress(){
-    var template_text_length = $("#template_text").val().length;
+    var template_text_length = $(".template_text").val().length;
     var quote_length = $("#text").text().length;
     return ((template_text_length / quote_length) * 100);
 }
@@ -150,7 +152,7 @@ function giveColorFeedback(text,template_text){
 }
 
 function isGameOver(){
-    return ($('#text').text()===$('#template_text').val());
+    return ($('#text').text()===$('.template_text').val());
 }
 
 function handleGameOver() {
@@ -167,7 +169,7 @@ function displayAccuracy() {
     $(' #accuracy').text(accuracy);
 }
 function disableInput() {
-    $('#template_text').prop('disabled', true);
+    $('.template_text').prop('disabled', true);
 }
 
 

@@ -6,20 +6,33 @@
   </div>
 </div>
 
-<%#= form_with(model:@type_racer,local:true) do |form| %>
-<!--  <div class="field">-->
-    <%#= form.text_area :text_area, id: :template_text, remote:true %>
-<!--    <span class ="match"> </span>-->
-<!--    <span class ="unmatch"></span>-->
-<!--  </div>-->
-<!--  <div class="hiddenField">-->
-<!--    <input type="hidden" id="text_id" value="<%#= @type_race.id %>"  >-->
-<!--  </div>-->
-<%# end %>
+<%= form_for(@type_race, remote:true) do |form| %>
+  <% if current_user.id == @type_race.user_1_id %>
+    <%= content_tag :field,  data: {user_id: current_user.id} do %>
+      <%= form.text_area :user_1_progress, class: :template_text, remote:true %>
+    <% end %>
+  <% end %>
+
+  <% if current_user.id == @type_race.user_2_id %>
+    <%= content_tag :field, data: {user_id: current_user.id} do %>
+      <%= form.text_area :user_2_progress, class: :template_text, remote:true %>
+    <% end %>
+  <% end %>
+
+
+  <div class="check">
+    <span class ="match"> </span>
+    <span class ="unmatch"></span>
+  </div>
+
+  <div class="hiddenField">
+    <input type="hidden" id="text_id" value="<%= @type_race.id %>"  >
+  </div>
+
+<% end %>
 
 
 <!----------------------------------------------------------------------------------------------------------------------------->
-
 
 <div class="input">
   <h1><span id="displayedText"></span>
@@ -27,9 +40,9 @@
     <span class ="unmatch"></span>
   </h1>
 </div>
-<div>
-  <input type = "text" id="userInput" value="" size="100">
-</div>
+<!--<div>-->
+<!--  <input type = "text" id="userInput" value="" size="100">-->
+<!--</div>-->
 <button >Start</button>
 <div>
   <p>WPM : <span id="checkWpm"> 0 </span></p>
