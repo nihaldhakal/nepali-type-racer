@@ -35,7 +35,7 @@ class TypeRacesController < ApplicationController
     # if pending_race && pending_race.time_remaining?
     if pending_race
       pending_race.update(user_2_id: current_user.id, status: "ongoing")
-      pending_race.update(type_race_params)
+      # pending_race.update(type_race_params)
       redirect_to type_race_path(pending_race)
       # if time_count == true
       #   join_race # use if additional logic needed
@@ -56,7 +56,7 @@ class TypeRacesController < ApplicationController
   private
 
   def type_race_params
-    params.permit(:user_1_progress, :user_2_progress, :user_1_accuracy, :user_2_accuracy, :user_1_wpm, :user_2_wpm )
+    params.require(:type_race).permit(:user_1_progress, :user_2_progress, :user_1_accuracy, :user_2_accuracy, :user_1_wpm, :user_2_wpm )
   end
 
   def destroy_race

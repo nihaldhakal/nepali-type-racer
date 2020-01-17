@@ -55,9 +55,9 @@ $(document).on("turbolinks:load", function () {
         var text = $("#text").text();
         var template_text =  $(".template_text").val();
         var user_id = $("field").data('user-id');
-        var data= {"text":template_text,"user_id": user_id}
-        data["user_1_progress"] =  $('#type_race_user_1_progress').val();
-        data["user_2_progress"] =  $('#type_race_user_2_progress').val();
+        var user_1 = $('#type_race_user_1_progress').val();
+        var user_2 = $('#type_race_user_2_progress').val();
+        var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2}};
         $.ajax({
             url: "/type_races/poll/"+text_id,
             type: "PUT",
