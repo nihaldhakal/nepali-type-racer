@@ -3,7 +3,7 @@ class TypeRacesController < ApplicationController
 
   def index
     @type_race = TypeRace.last
-    if @type_race.user_1_id.nil? or @type_race.user_2_id.nil?
+    if @type_race.present? and (@type_race.user_1_id.nil? or @type_race.user_2_id.nil?)
       @type_race.update_attribute(:status ,"canceled")
       if user_logged_in? && @type_race.canceled?
         destroy_race
