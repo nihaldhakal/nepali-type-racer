@@ -33,14 +33,14 @@ $(document).on("turbolinks:load", function () {
         $('.template_text').focus();
         $('.template_text').val("");
     });
-    //
+
     // if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
     // {
     //     setInterval(function () {
     //         console.log($('#current_id').val());
     //         $.ajax({
     //             url: "/type_races/poll/" + $('#current_id').val(),
-    //             type: "GET",
+    //             type: "PUT",
     //             dataType: "json",
     //             data: {},
     //             success:function (data,status,jqXHR) {
@@ -50,6 +50,26 @@ $(document).on("turbolinks:load", function () {
     //     },3000);
     // }
 
+    if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
+    {
+        setInterval(function () {
+            console.log($('#current_id').val());
+            $.ajax({
+                url: "/type_races/create_or_join/" + $('#current_id').val(),
+                type: "PUT",
+                dataType: "json",
+                data: {},
+                success:function (data,status,jqXHR) {
+                    location.reload();
+                }
+            });
+        },3000);
+    }
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------
 
     $(".template_text").keyup(function () {
         var text = $("#text").text();
@@ -59,13 +79,13 @@ $(document).on("turbolinks:load", function () {
         var user_2 = $('#type_race_user_2_progress').val();
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2}};
         $.ajax({
-            url: "/type_races/poll/"+text_id,
-            type: "PUT",
+            url: "/type_races/" + text_id,
+            type: "POST",
             dataType: 'json',
             // contentType: "application/json",
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             crossOrigin: true,
-            data :  data ,
+            data :  data,
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
                 updateProgressBar(text,template_text);
@@ -75,12 +95,10 @@ $(document).on("turbolinks:load", function () {
                 }
             },
             error: function (a,b,c) {
-            },
-            complete: function () {
-                console.log("Completed");
             }
         });
     });
+
     $(".template_text").on("input",function(event){
         if (startTime === undefined) {
             startTime = new Date($.now());
