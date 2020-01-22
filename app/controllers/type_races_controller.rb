@@ -30,7 +30,6 @@ class TypeRacesController < ApplicationController
   # end
 
   def create_or_join
-    templates = RaceTemplate.all.sample.id
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
     if pending_race
@@ -40,16 +39,21 @@ class TypeRacesController < ApplicationController
       # if time_count == true
       #   join_race # use if additional logic needed
     else
+      templates = RaceTemplate.all.sample.id
       type_race = TypeRace.create(user_1_id: current_user.id, user_2_id: nil, race_templates_id: templates)
       redirect_to type_race_path(type_race)
     end
   end
 
-  def poll
+  def fetch_progress
+
+  end
+
+  def update_progress
     type_race = TypeRace.find(params[:id])
     return if type_race.nil?
     if type_race.status == "ongoing"
-      # type_race.update(type_race_params)
+      type_race.update(type_race_params)
     end
   end
 

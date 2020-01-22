@@ -26,6 +26,7 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
+    var user_id = $("field").data('user-id');
     var text_id = $("#text_id").val();
     // var template_text_1_id = $("#template_text_1").val();
     // var template_text_2_id = $("#template_text_2").val();
@@ -50,24 +51,26 @@ $(document).on("turbolinks:load", function () {
     //     },3000);
     // }
 
-    if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
-    {
-        setInterval(function () {
-            console.log($('#current_id').val());
-            $.ajax({
-                url: "/type_races/create_or_join/" + $('#current_id').val(),
-                type: "PUT",
-                dataType: "json",
-                data: {},
-                success:function (data,status,jqXHR) {
-                    location.reload();
-                }
-            });
-        },3000);
-    }
+        if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
+        {
+            
+            setInterval(function () {
+                location.reload();
+            },3000);
+        }
 
 
 
+
+
+    // $.ajax({
+    //     url: "/type_races/fetch_progress/" + $('#current_id').val(),
+    //     type: "PUT",
+    //     dataType: "json",
+    //     data: {},
+    //     success:function (data,status,jqXHR) {
+    //     }
+    // });
 
 // ------------------------------------------------------------------------------------------------------------------------
 
@@ -79,8 +82,8 @@ $(document).on("turbolinks:load", function () {
         var user_2 = $('#type_race_user_2_progress').val();
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2}};
         $.ajax({
-            url: "/type_races/" + text_id,
-            type: "POST",
+            url: "/type_races/update_progress/" + text_id,
+            type: "PUT",
             dataType: 'json',
             // contentType: "application/json",
             headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -95,6 +98,7 @@ $(document).on("turbolinks:load", function () {
                 }
             },
             error: function (a,b,c) {
+                debugger
             }
         });
     });
@@ -103,7 +107,6 @@ $(document).on("turbolinks:load", function () {
         if (startTime === undefined) {
             startTime = new Date($.now());
         }
-
         var modifierKeyKeyCodes = [16,17,18,20,27,37,38,39,40,46];
         if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
             userKeyPressCount++;
