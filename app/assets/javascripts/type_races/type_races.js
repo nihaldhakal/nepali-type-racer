@@ -19,19 +19,8 @@ $(document).on("turbolinks:load", function () {
             },3000);
         }
     }
-    // Ajax for fetching progress from the database and displaying it to another player.
-    $.ajax({
-        url: "/type_races/fetch_progress/" + $('#current_id').val(),
-        type: "PUT",
-        dataType: "json",
-        data: {},
-        success:function (data,status,jqXHR) {
-            setInterval(function () {
-                console.log("Yes");
-            },2000);
-        }
-    });
-    
+
+
 // ------------------------------------------------------------------------------------------------------------------------
 
     $(".template_text").keyup(function () {
@@ -40,8 +29,13 @@ $(document).on("turbolinks:load", function () {
         var user_id = $("field").data('user-id');
         var user_1 = $('#type_race_user_1_progress').val();
         var user_2 = $('#type_race_user_2_progress').val();
+        var user_1_wpm = $('#checkWpm1').text();
+        var user_2_wpm = $('#checkWpm2').text();
+        var user_1_accuracy = $('#accuracy1').text();
+        var user_2_accuracy = $('#accuracy2').text();
         // Passing data as a object.
-        var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2}};
+        var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2,"user_1_wpm": user_1_wpm,
+                               "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/update_progress/" + text_id,
@@ -53,14 +47,25 @@ $(document).on("turbolinks:load", function () {
             data :  data,
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
-                updateProgressBar(text,template_text);
                 updateWPM();
                 if (isGameOver() == true){
                     handleGameOver();
                 }
             },
             error: function (a,b,c) {
-                debugger
+            }
+        });
+
+        // Ajax for fetching progress from the database and displaying it to another player.
+        $.ajax({
+            url: "/type_races/fetch_progress/" + $('#current_id').val(),
+            type: "PUT",
+            dataType: "json",
+            data: {},
+            success:function (data,status,jqXHR) {
+                setInterval(function () {
+                    updateProgressBar(text,template_text);
+                },2000);
             }
         });
     });
@@ -94,7 +99,11 @@ function updateWPM(){
     var wordsWritten = countCharacters/5;
     var wpm = wordsWritten/timeInMins;
     wpm = parseInt(wpm,10);
-    $('#checkWpm').text(wpm);
+    if ($("field").data('user-id') == 1){
+        $('#checkWpm1').text(wpm);
+    }else {
+        $('#checkWpm2').text(wpm);
+    }
 }
 function updateProgressBar(text,template_text){
     var percentage = 3 + getProgress();
@@ -151,7 +160,12 @@ function displayAccuracy() {
     var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
     $('#showAccuracy').removeClass("hidden");
-    $(' #accuracy').text(accuracy);
+    if ($("field").data('user-id') == 1){
+        $(' #accuracy1').text(accuracy);
+    }else {
+        $(' #accuracy2').text(accuracy);
+    }
+
 }
 function disableInput() {
     $('.template_text').prop('disabled', true);

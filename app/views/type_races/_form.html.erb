@@ -44,8 +44,15 @@
 <!--</div>-->
 <button >Start</button>
 <div>
-  <p>WPM : <span id="checkWpm"> 0 </span></p>
-</div>
-<div class="hidden" id="showAccuracy">
-  <p >Accuracy : <span id="accuracy"> 0 </span></p>
+  <% if current_user.id == @type_race.user_1_id %>
+    <p>WPM : <span id="checkWpm1"> 0 </span></p>
+    <div class="hidden" id="showAccuracy">
+      <p >Accuracy : <span id="accuracy1"> 0 </span></p>
+    </div>
+  <% else %>
+    <p>WPM : <span id="checkWpm2"> 0 </span></p>
+    <div class="hidden" id="showAccuracy">
+      <p >Accuracy : <span id="accuracy2"> 0 </span></p>
+    </div>
+  <% end %>
 </div>

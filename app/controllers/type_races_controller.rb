@@ -60,7 +60,7 @@ class TypeRacesController < ApplicationController
   private
 
   def type_race_params
-    params.permit(:user_1_progress, :user_2_progress, :user_1_accuracy, :user_2_accuracy, :user_1_wpm, :user_2_wpm )
+    params.require(:type_race).permit(:user_1_progress, :user_2_progress, :user_1_accuracy, :user_2_accuracy, :user_1_wpm, :user_2_wpm )
   end
 
   def destroy_race
