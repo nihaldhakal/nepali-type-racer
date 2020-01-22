@@ -1,77 +1,37 @@
-// $(document).ready(function () {
-//     $("#template_text").keyup(function () {
-//         var text = $("#text").html();
-//         var template_text =  $("#template_text").val();
-//         $.ajax({
-//             url: "/type_races/create",
-//             type: "POST",
-//             dataType: 'json',
-//             data :{"text_area": template_text },
-//             success: function (data,status,jqXHR) {
-//                 $("#dummy_text").val(template_text);
-//             },
-//             error: function () {
-//
-//             }
-//         });
-//     });
-// });
-
-
-
-
 var countCharacters=0;
 var startTime;
 var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
-    var user_id = $("field").data('user-id');
     var text_id = $("#text_id").val();
-    // var template_text_1_id = $("#template_text_1").val();
-    // var template_text_2_id = $("#template_text_2").val();
     $("button").on("click",function () {
         $('.template_text').focus();
         $('.template_text').val("");
     });
-
-    // if ((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" )
-    // {
-    //     setInterval(function () {
-    //         console.log($('#current_id').val());
-    //         $.ajax({
-    //             url: "/type_races/poll/" + $('#current_id').val(),
-    //             type: "PUT",
-    //             dataType: "json",
-    //             data: {},
-    //             success:function (data,status,jqXHR) {
-    //                 location.reload();
-    //             }
-    //         });
-    //     },3000);
-    // }
-
-        if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
-        {
-            
+    // The controller must be type_race and its action must be show do take following action. (Using data-attributes)
+    if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
+    {
+        // If the type_race status is pending than keep on reloading page until its status changes.
+        if ($("#type_race_status").data("type_race_status") == "pending"){
             setInterval(function () {
                 location.reload();
             },3000);
         }
-
-
-
-
-
-    // $.ajax({
-    //     url: "/type_races/fetch_progress/" + $('#current_id').val(),
-    //     type: "PUT",
-    //     dataType: "json",
-    //     data: {},
-    //     success:function (data,status,jqXHR) {
-    //     }
-    // });
-
+    }
+    // Ajax for fetching progress from the database and displaying it to another player.
+    $.ajax({
+        url: "/type_races/fetch_progress/" + $('#current_id').val(),
+        type: "PUT",
+        dataType: "json",
+        data: {},
+        success:function (data,status,jqXHR) {
+            setInterval(function () {
+                console.log("Yes");
+            },2000);
+        }
+    });
+    
 // ------------------------------------------------------------------------------------------------------------------------
 
     $(".template_text").keyup(function () {
@@ -80,7 +40,9 @@ $(document).on("turbolinks:load", function () {
         var user_id = $("field").data('user-id');
         var user_1 = $('#type_race_user_1_progress').val();
         var user_2 = $('#type_race_user_2_progress').val();
+        // Passing data as a object.
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2}};
+        // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/update_progress/" + text_id,
             type: "PUT",

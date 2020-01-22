@@ -1,5 +1,6 @@
 <%= render 'users' %>
 <%= hidden_field_tag :current_id, params[:id] %>
+<%= content_tag "div", id: "type_race_status", 'data-type_race_status' => @type_race.status do %><% end %>
 <% if @type_race.status == "pending" %>
   <%= render 'waiting' %>
 <%else %>
