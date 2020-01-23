@@ -13,9 +13,11 @@
   background: lightcoral;
 }
 
-#barProgress {
+.progressBar {
   width: 1000px;
-  background-color: black;
+  background-color: transparent;
+  border-bottom-style: dashed;
+  border-color: #666666;
   height: 42px;
 }
 #newBar {
@@ -26,4 +28,8 @@
 
 #typeRaceButton{
   color: #B00100;
+}
+
+#user_name{
+  color: red;
 }

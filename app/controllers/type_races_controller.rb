@@ -16,6 +16,7 @@ class TypeRacesController < ApplicationController
     # @templates = RaceTemplate.find_by(params[:template])
     @type_race = TypeRace.find(params[:id])
     @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
+    @user = User.find_by_id(current_user.id)
   end
 
   # def start_or_join_request
@@ -34,7 +35,7 @@ class TypeRacesController < ApplicationController
     # if pending_race && pending_race.time_remaining?
     if pending_race
       pending_race.update(user_2_id: current_user.id, status: "ongoing")
-      pending_race.update(type_race_params)
+      # pending_race.update(type_race_params)
       redirect_to type_race_path(pending_race)
       # if time_count == true
       #   join_race # use if additional logic needed

@@ -35,7 +35,7 @@ $(document).on("turbolinks:load", function () {
         var user_2_accuracy = $('#accuracy2').text();
         // Passing data as a object.
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2,"user_1_wpm": user_1_wpm,
-                               "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
+                "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/update_progress/" + text_id,
@@ -47,6 +47,7 @@ $(document).on("turbolinks:load", function () {
             data :  data,
             success: function (data,status,jqXHR) {
                 giveColorFeedback(text,template_text);
+                updateProgressBar(text,template_text);
                 updateWPM();
                 if (isGameOver() == true){
                     handleGameOver();
@@ -64,7 +65,6 @@ $(document).on("turbolinks:load", function () {
             data: {},
             success:function (data,status,jqXHR) {
                 setInterval(function () {
-                    updateProgressBar(text,template_text);
                 },2000);
             }
         });

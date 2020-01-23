@@ -1,58 +1,60 @@
-
-<span id="text"><%= template.text %></span>
-<div id = "barProgress">
-  <div id="newBar">
-    <%=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
-  </div>
-</div>
-
-<%= form_for(@type_race, remote:true) do |form| %>
-  <% if current_user.id == @type_race.user_1_id %>
-    <%= content_tag :field,  data: {user_id: current_user.id} do %>
-      <%= form.text_area :user_1_progress, class: :template_text, remote:true %>
-    <% end %>
-  <% end %>
-
-  <% if current_user.id == @type_race.user_2_id %>
-    <%= content_tag :field, data: {user_id: current_user.id} do %>
-      <%= form.text_area :user_2_progress, class: :template_text, remote:true %>
-    <% end %>
-  <% end %>
-
-  <div class="check">
-    <span class ="match"> </span>
-    <span class ="unmatch"></span>
-  </div>
-
-  <div class="hiddenField">
-    <input type="hidden" id="text_id" value="<%= @type_race.id %>"  >
-  </div>
-
-<% end %>
-
-
-<!----------------------------------------------------------------------------------------------------------------------------->
-
-<div class="input">
-  <h1><span id="displayedText"></span>
-    <span class ="match"> </span>
-    <span class ="unmatch"></span>
-  </h1>
-</div>
-<!--<div>-->
-<!--  <input type = "text" id="userInput" value="" size="100">-->
-<!--</div>-->
-<button >Start</button>
-<div>
-  <% if current_user.id == @type_race.user_1_id %>
-    <p>WPM : <span id="checkWpm1"> 0 </span></p>
-    <div class="hidden" id="showAccuracy">
-      <p >Accuracy : <span id="accuracy1"> 0 </span></p>
+<div class="container">
+  <span id="text"><%= template.text %></span><br>
+  <span id="user_name"><%= @user.user_name %></span>
+  <div class = "progressBar">
+    <div id="newBar">
+      <%=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
     </div>
-  <% else %>
-    <p>WPM : <span id="checkWpm2"> 0 </span></p>
-    <div class="hidden" id="showAccuracy">
-      <p >Accuracy : <span id="accuracy2"> 0 </span></p>
+  </div>
+
+  <%= form_for(@type_race, remote:true) do |form| %>
+    <% if current_user.id == @type_race.user_1_id %>
+      <%= content_tag :field,  data: {user_id: current_user.id} do %>
+        <%= form.text_area :user_1_progress, class: :template_text, remote:true %>
+      <% end %>
+    <% end %>
+
+    <% if current_user.id == @type_race.user_2_id %>
+      <%= content_tag :field, data: {user_id: current_user.id} do %>
+        <%= form.text_area :user_2_progress, class: :template_text, remote:true %>
+      <% end %>
+    <% end %>
+
+    <div class="check">
+      <span class ="match"> </span>
+      <span class ="unmatch"></span>
     </div>
+
+    <div class="hiddenField">
+      <input type="hidden" id="text_id" value="<%= @type_race.id %>"  >
+    </div>
+
   <% end %>
+
+  <!----------------------------------------------------------------------------------------------------------------------------->
+
+  <div class="input">
+    <h1><span id="displayedText"></span>
+      <span class ="match"> </span>
+      <span class ="unmatch"></span>
+    </h1>
+  </div>
+  <!--<div>-->
+  <!--  <input type = "text" id="userInput" value="" size="100">-->
+  <!--</div>-->
+  <button >Start</button>
+  <div>
+    <% if current_user.id == @type_race.user_1_id %>
+      <p>WPM : <span id="checkWpm1"> 0 </span></p>
+      <div class="hidden" id="showAccuracy">
+        <p >Accuracy : <span id="accuracy1"> 0 </span></p>
+      </div>
+    <% else %>
+      <p>WPM : <span id="checkWpm2"> 0 </span></p>
+      <div class="hidden" id="showAccuracy">
+        <p >Accuracy : <span id="accuracy2"> 0 </span></p>
+      </div>
+    <% end %>
+  </div>
+
 </div>
