@@ -4,7 +4,7 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
-    // setInterval(fetchProgress,1000);
+    setInterval(fetchProgress,1000);
     var text_id = $("#text_id").val();
     $("button").on("click",function () {
         $('.text').focus();
@@ -21,8 +21,7 @@ $(document).on("turbolinks:load", function () {
         }
     }
     $(".text").keyup(function () {
-        var templateText = $("#templateText").text();
-        var text =  $(".text").val();
+        // var text =  $(".text").val();
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_1 = $('#type_race_user_1_progress').val();
@@ -34,12 +33,9 @@ $(document).on("turbolinks:load", function () {
         // Passing data as a object.
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2,"user_1_wpm": user_1_wpm,
                 "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
-        giveColorFeedback(templateText,text);
+        giveColorFeedback(getTemplateText(),getText());
         // updateProgressBar("#newBar"+ user_id ,text,template_text);
         updateWPM();
-        if (isGameOver() == true){
-            handleGameOver();
-        }
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/update_progress/" + text_id,
@@ -67,6 +63,13 @@ $(document).on("turbolinks:load", function () {
     });
 });
 
+function getTemplateText(){
+    return $("#templateText").text();
+}
+function getText(){
+    return $(".text").val();
+}
+
 function fetchProgress() {
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
@@ -75,8 +78,8 @@ function fetchProgress() {
         dataType: "json",
         data: {},
         success:function (data,status,jqXHR) {
-            updateProgress(1, data)
-            updateProgress(2, data)
+            updateProgress(1, data);
+            updateProgress(2, data);
 
         },
         error: function (a,b,c) {
@@ -85,14 +88,13 @@ function fetchProgress() {
 }
 
 function updateProgress(userId, data) {
-    var templateText = $("#templateText").text();
     var text = data["user_"+ userId +"_progress"];
-    updateProgressBar("#newBar"+ userId ,templateText,text);
+    updateProgressBar("#newBar"+ userId ,getTemplateText(),text);
 }
 
 function arrayOfText() {
-    var textTemplate=$("#templateText").text();
-    var textTemplateCharArray = textTemplate.split("");
+    // var textTemplate=$("#templateText").text();
+    var textTemplateCharArray = getTemplateText().split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
         textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
     }
@@ -148,7 +150,7 @@ function giveColorFeedback(templateText,text){
 }
 
 function isGameOver(){
-    return ($('#templateText').text()===$('.text').val());
+    return (getTemplateText()===getText());
 }
 
 function handleGameOver() {
@@ -157,7 +159,7 @@ function handleGameOver() {
 }
 
 function displayAccuracy() {
-    var textCharLen= $('#templateText').text().length;
+    var textCharLen= getTemplateText().length;
     var userKeyPressInputCharLen=userKeyPressCount;
     var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
