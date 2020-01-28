@@ -1,12 +1,21 @@
 <div class="container">
+  <%= content_tag :div, id: "user_count", data:{ user_count: User.count} do %><%end %>
   <span id="text"><%= template.text %></span><br>
   <span id="user_name"><%= @user.user_name %></span>
-  <div class = "progressBar">
-    <div id="newBar">
-      <%=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
+  <% if @type_race.user_1_id == 1 %>
+    <div class = "progressBar1">
+      <div id="newBar1">
+        <%=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
+      </div>
     </div>
-  </div>
-
+  <%end %>
+  <% if @type_race.user_2_id == 2 %>
+    <div class = "progressBar2">
+      <div id="newBar2">
+        <%=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
+      </div>
+    </div>
+  <% end %>
   <%= form_for(@type_race, remote:true) do |form| %>
     <% if current_user.id == @type_race.user_1_id %>
       <%= content_tag :field,  data: {user_id: current_user.id} do %>

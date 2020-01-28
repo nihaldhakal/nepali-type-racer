@@ -1,6 +1,5 @@
 class TypeRacesController < ApplicationController
   # access all: [:show, :index], user: {except: [:destroy]}, company_admin: :all
-
   def index
     @type_race = TypeRace.last
     if @type_race.present? and (@type_race.user_1_id.nil? or @type_race.user_2_id.nil?)
@@ -19,17 +18,6 @@ class TypeRacesController < ApplicationController
     @user = User.find_by_id(current_user.id)
   end
 
-  # def start_or_join_request
-  #   @type_race = TypeRace.create(user_id: current_user)
-  #   user_count =  TypeRace.find(User.count)
-  #   if time_count== false && user_count >=1
-  #     create_or_join
-  #   else
-  #     update
-  #     start_or_join_request
-  #   end
-  # end
-
   def create_or_join
     pending_race = TypeRace.pending.last
     # if pending_race && pending_race.time_remaining?
@@ -47,7 +35,12 @@ class TypeRacesController < ApplicationController
   end
 
   def fetch_progress
-
+    @type_race = TypeRace.find(params[:id])
+    respond_to  do |format|
+      format.js do
+        render json: @type_race
+      end
+  end
   end
 
   def update_progress
