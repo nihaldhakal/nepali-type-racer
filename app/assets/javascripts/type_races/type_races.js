@@ -4,11 +4,11 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
-    setInterval(fetchProgress,1000);
+    // setInterval(fetchProgress,1000);
     var text_id = $("#text_id").val();
     $("button").on("click",function () {
-        $('.template_text').focus();
-        $('.template_text').val("");
+        $('.text').focus();
+        $('.text').val("");
     });
     // The controller must be type_race and its action must be show do take following action. (Using data-attributes)
     if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
@@ -20,9 +20,9 @@ $(document).on("turbolinks:load", function () {
             },3000);
         }
     }
-    $(".template_text").keyup(function () {
-        var text = $("#text").text();
-        var template_text =  $(".template_text").val();
+    $(".text").keyup(function () {
+        var templateText = $("#templateText").text();
+        var text =  $(".text").val();
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_1 = $('#type_race_user_1_progress').val();
@@ -34,8 +34,8 @@ $(document).on("turbolinks:load", function () {
         // Passing data as a object.
         var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2,"user_1_wpm": user_1_wpm,
                 "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
-        giveColorFeedback(text,template_text);
-        updateProgressBar("#newBar"+ user_id ,text,template_text);
+        giveColorFeedback(templateText,text);
+        // updateProgressBar("#newBar"+ user_id ,text,template_text);
         updateWPM();
         if (isGameOver() == true){
             handleGameOver();
@@ -56,7 +56,7 @@ $(document).on("turbolinks:load", function () {
 
     });
 
-    $(".template_text").on("input",function(event){
+    $(".text").on("input",function(event){
         if (startTime === undefined) {
             startTime = new Date($.now());
         }
@@ -68,9 +68,6 @@ $(document).on("turbolinks:load", function () {
 });
 
 function fetchProgress() {
-    var text = $("#text").text();
-    var user_id = $("field").data('user-id');
-    var other_user_id = user_id == 1 ? 2 : 1;
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
         url: "/type_races/fetch_progress/" + $('#current_id').val(),
@@ -78,22 +75,29 @@ function fetchProgress() {
         dataType: "json",
         data: {},
         success:function (data,status,jqXHR) {
-            var template_text = data["user_"+ other_user_id +"_progress"];
-            updateProgressBar("#newBar"+ other_user_id ,text,template_text);
+            updateProgress(1, data)
+            updateProgress(2, data)
+
         },
         error: function (a,b,c) {
         }
     });
 }
 
+function updateProgress(userId, data) {
+    var templateText = $("#templateText").text();
+    var text = data["user_"+ userId +"_progress"];
+    updateProgressBar("#newBar"+ userId ,templateText,text);
+}
+
 function arrayOfText() {
-    var textTemplate=$("#text").text();
+    var textTemplate=$("#templateText").text();
     var textTemplateCharArray = textTemplate.split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
         textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
     }
     var textTemplateSpanified = textTemplateCharArray.join("");
-    $("#text").html(textTemplateSpanified);
+    $("#templateText").html(textTemplateSpanified);
 }
 
 function updateWPM(){
@@ -111,30 +115,30 @@ function updateWPM(){
     }
 }
 
-function updateProgressBar(identifier,text,templateText){
-    var percentage = 3 + getProgress(text,templateText);
+function updateProgressBar(identifier,templateText,text){
+    var percentage = 3 + getProgress(templateText,text);
     var progressBar = $(identifier);
-    var currentCharIndex = templateText.length - 1;
-    for(var i = currentCharIndex; i <= text.length - 1 ; i++) {
-        if (templateText[currentCharIndex] === text[currentCharIndex]) {
+    var currentCharIndex = text.length - 1;
+    for(var i = currentCharIndex; i <= templateText.length - 1 ; i++) {
+        if (text[currentCharIndex] === templateText[currentCharIndex]) {
             $(progressBar).css("width", percentage + "%" );
             // $("#newBar").animate({left: "+=500"}, 2000);
         }
     }
 }
-function getProgress(text,templateText){
-    var template_text_length = templateText.length;
-    var quote_length = text.length;
-    return ((template_text_length / quote_length) * 100);
+function getProgress(templateText,text){
+    var text_length = text.length;
+    var quote_length = templateText.length;
+    return ((text_length / quote_length) * 100);
 }
 
-function giveColorFeedback(text,template_text){
+function giveColorFeedback(templateText,text){
     let currentCharIndex = 0 ;
-    for(let i = currentCharIndex; i < text.length  ; i++){
+    for(let i = currentCharIndex; i < templateText.length  ; i++){
         $("span #" + i).removeClass("match unmatch");
     }
-    for (let i= currentCharIndex; i<template_text.length; i++){
-        if (template_text[i] == text[i]){
+    for (let i= currentCharIndex; i<text.length; i++){
+        if (text[i] == templateText[i]){
             $("span #" + i).addClass("match").removeClass("unmatch");
             // console.log($("span #" + i));
         } else {
@@ -144,7 +148,7 @@ function giveColorFeedback(text,template_text){
 }
 
 function isGameOver(){
-    return ($('#text').text()===$('.template_text').val());
+    return ($('#templateText').text()===$('.text').val());
 }
 
 function handleGameOver() {
@@ -153,7 +157,7 @@ function handleGameOver() {
 }
 
 function displayAccuracy() {
-    var textCharLen= $('#text').text().length;
+    var textCharLen= $('#templateText').text().length;
     var userKeyPressInputCharLen=userKeyPressCount;
     var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
@@ -166,7 +170,7 @@ function displayAccuracy() {
 
 }
 function disableInput() {
-    $('.template_text').prop('disabled', true);
+    $('.text').prop('disabled', true);
 }
 
 

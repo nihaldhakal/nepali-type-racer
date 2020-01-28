@@ -1,6 +1,6 @@
 <div class="container">
   <%= content_tag :div, id: "user_count", data:{ user_count: User.count} do %><%end %>
-  <span id="text"><%= template.text %></span><br>
+  <span id="templateText"><%= template.text %></span><br>
   <span id="user_name"><%= @user.user_name %></span>
   <% if @type_race.user_1_id == 1 %>
     <div class = "progressBar1">
@@ -16,16 +16,17 @@
       </div>
     </div>
   <% end %>
+  <br>
   <%= form_for(@type_race, remote:true) do |form| %>
     <% if current_user.id == @type_race.user_1_id %>
       <%= content_tag :field,  data: {user_id: current_user.id} do %>
-        <%= form.text_area :user_1_progress, class: :template_text, remote:true %>
+        <%= form.text_area :user_1_progress, class: :text, remote:true %>
       <% end %>
     <% end %>
 
     <% if current_user.id == @type_race.user_2_id %>
       <%= content_tag :field, data: {user_id: current_user.id} do %>
-        <%= form.text_area :user_2_progress, class: :template_text, remote:true %>
+        <%= form.text_area :user_2_progress, class: :text, remote:true %>
       <% end %>
     <% end %>
 
