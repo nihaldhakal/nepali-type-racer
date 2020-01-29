@@ -1,6 +1,8 @@
 <div class="container">
   <%= content_tag :div, id: "user_count", data:{ user_count: User.count} do %><%end %>
-  <span id="templateText"><%= template.text %></span><br>
+  <div class="badge badge-info text-wrap" style="width: inherit" >
+    <span id="templateText"><%= template.text %></span><br>
+  </div>
   <span id="user_name"><%= @user.user_name %></span>
   <% if @type_race.user_1_id == 1 %>
     <div class = "progressBar1">
@@ -20,13 +22,17 @@
   <%= form_for(@type_race, remote:true) do |form| %>
     <% if current_user.id == @type_race.user_1_id %>
       <%= content_tag :field,  data: {user_id: current_user.id} do %>
-        <%= form.text_area :user_1_progress, class: :text, remote:true %>
+        <div class="form-group form-control-lg">
+            <%= form.text_field :user_1_progress, class:  "form-control text", remote:true %>
+        </div>
       <% end %>
     <% end %>
 
     <% if current_user.id == @type_race.user_2_id %>
       <%= content_tag :field, data: {user_id: current_user.id} do %>
-        <%= form.text_area :user_2_progress, class: :text, remote:true %>
+        <div class="form-group form-control-lg">
+            <%= form.text_field :user_2_progress, class:  "form-control text", remote:true %>
+        </div>
       <% end %>
     <% end %>
 
@@ -49,18 +55,14 @@
       <span class ="unmatch"></span>
     </h1>
   </div>
-  <!--<div>-->
-  <!--  <input type = "text" id="userInput" value="" size="100">-->
-  <!--</div>-->
-  <button >Start</button>
   <div>
     <% if current_user.id == @type_race.user_1_id %>
-      <p>WPM : <span id="checkWpm1"> 0 </span></p>
+      <p class="wpm">WPM : <span id="checkWpm1"> 0 </span></p>
       <div class="hidden" id="showAccuracy">
         <p >Accuracy : <span id="accuracy1"> 0 </span></p>
       </div>
     <% else %>
-      <p>WPM : <span id="checkWpm2"> 0 </span></p>
+      <p class="wpm">WPM : <span id="checkWpm2"> 0 </span></p>
       <div class="hidden" id="showAccuracy">
         <p >Accuracy : <span id="accuracy2"> 0 </span></p>
       </div>

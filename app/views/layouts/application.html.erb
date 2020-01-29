@@ -10,15 +10,15 @@
 <!--  <body data-controller="<%#= controller_name %>" data-action="<%#= action_name%>">-->
 <body>
 <%= content_tag :body, data: { action: action_name, controller: controller_name } do %>
-  <div class="navbar navbar-nav navbar-right">
+  <nav class="navbar navbar-expand-md bg-light navbar-right  sticky-top">
     <% if user_signed_in? %>
-      <li><%= link_to "Logged in as #{current_user.email}", root_path,  class: "active" %></li>
-      <li><%= link_to "Log Out", destroy_user_session_path, method: :delete %></li>
+      <a class="nav-link"><%= link_to "Logged in as #{current_user.email}", root_path %> </a>
+      <a class="nav-link"><%= link_to "Log Out", destroy_user_session_path, method: :delete %></a>
     <% else %>
-      <li><%= link_to("Sign In", new_user_session_path, class: "active")%></li>
-      <li><%= link_to "Sign Up", new_user_registration_path, class: "active" %></li>
+      <a class="nav-link"><%= link_to("Sign In", new_user_session_path)%></a>
+      <a class="nav-link"><%= link_to "Sign Up", new_user_registration_path %></a>
     <% end %>
-  </div><!-- /.navbar-collapse -->
+  </nav><!-- /.navbar-collapse -->
   <div class="container">
     <% flash.each do |message,message_type| %>
       <div class="alert alert-<%= message%>"><%= message_type %></div>

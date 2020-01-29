@@ -1,63 +1,68 @@
-<h1>TypeRacers</h1>
 <% if current_user.present?  && current_user.has_roles?(:admin)  %>
   <h1>You are admin</h1>
 <% end %>
+<div class="container-fluid">
+  <h1>TypeRace</h1>
+  <% if current_user.present?  && current_user.has_roles?(:user)  %>
+    <button type="button" class="btn btn-outline-success">
+      <%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
+    </button>
+</div>
+  <% else %>
+    <nav class="navbar navbar-expand-md bg-light navbar-right  sticky-top">
+      <a class="nav-link"><%= link_to("Sign In", new_user_session_path)%></a>
+      <a class="nav-link"><%= link_to "Sign Up", new_user_registration_path %></a>
+    </nav>
+  <% end %>
 
-<% if current_user.present?  && current_user.has_roles?(:user)  %>
-  <%= link_to 'Type Race', type_races_create_or_join_path, id: "typeRaceButton", method: :post %>
-<% else %>
-  <li><%= link_to("Sign In", new_user_session_path, class: "active")%></li>
-  <li><%= link_to "Sign Up", new_user_registration_path, class: "active" %></li>
-<% end %>
 
-
-<!--  <table class="table table-striped table-bordered">-->
-<!--    <thead >-->
-<!--    <tr>-->
-<!--      <th scope="colgroup">Text</th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr>-->
+  <!--  <table class="table table-striped table-bordered">-->
+  <!--    <thead >-->
+  <!--    <tr>-->
+  <!--      <th scope="colgroup">Text</th>-->
+  <!--    </tr>-->
+  <!--    </thead>-->
+  <!--    <tbody>-->
+  <!--    <tr>-->
 <%# debugger %>
-<!--      <td id="text"> <%#= @templates.text %> </td>-->
-<!--      <td>-->
+  <!--      <td id="text"> <%#= @templates.text %> </td>-->
+  <!--      <td>-->
 <%#= form_with(model:@template,local:true) do |form| %>
-<!--          <div class="field">-->
+  <!--          <div class="field">-->
 <%#= form.text_area :text_area, id: :text, remote:true %>
-<!--          </div>-->
+  <!--          </div>-->
 <%# end %>
-<!--      </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--  </table>-->
+  <!--      </td>-->
+  <!--    </tr>-->
+  <!--    </tbody>-->
+  <!--  </table>-->
 
 
 
 
-<!--<div id = "progressBar">-->
-<!--  <div id="newBar">-->
+  <!--<div id = "progressBar">-->
+  <!--  <div id="newBar">-->
 <%#=image_tag "car.jpg" ,width:50, height:42, class: "pull-right"%>
-<!--  </div>-->
+  <!--  </div>-->
 
-<!--</div>-->
+  <!--</div>-->
 
-<!--  <div class="input">-->
-<!--    <h1><span id="displayedText"></span>-->
-<!--      <span class ="match"> </span>-->
-<!--      <span class ="unmatch"></span>-->
-<!--    </h1>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <input type = "text" id="userInput" value="" size="100">-->
-<!--  </div>-->
-<!--  <button >Start</button>-->
-<!--  <div>-->
-<!--    <p>WPM : <span id="checkWpm"> 0 </span></p>-->
-<!--  </div>-->
-<!--  <div class="hidden" id="showAccuracy">-->
-<!--    <p >Accuracy : <span id="accuracy"> 0 </span></p>-->
-<!--  </div>-->
+  <!--  <div class="input">-->
+  <!--    <h1><span id="displayedText"></span>-->
+  <!--      <span class ="match"> </span>-->
+  <!--      <span class ="unmatch"></span>-->
+  <!--    </h1>-->
+  <!--  </div>-->
+  <!--  <div>-->
+  <!--    <input type = "text" id="userInput" value="" size="100">-->
+  <!--  </div>-->
+  <!--  <button >Start</button>-->
+  <!--  <div>-->
+  <!--    <p>WPM : <span id="checkWpm"> 0 </span></p>-->
+  <!--  </div>-->
+  <!--  <div class="hidden" id="showAccuracy">-->
+  <!--    <p >Accuracy : <span id="accuracy"> 0 </span></p>-->
+  <!--  </div>-->
 
 
 

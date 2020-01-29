@@ -4,7 +4,6 @@ var userKeyPressCount=0;
 
 $(document).on("turbolinks:load", function () {
     arrayOfText();
-    setInterval(fetchProgress,1000);
     var text_id = $("#text_id").val();
     $("button").on("click",function () {
         $('.text').focus();
@@ -19,9 +18,12 @@ $(document).on("turbolinks:load", function () {
                 location.reload();
             },3000);
         }
+        if ($("#type_race_status").data("type_race_status") == "ongoing"){
+            setInterval(fetchProgress,1000);
+        }
+
     }
     $(".text").keyup(function () {
-        // var text =  $(".text").val();
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_1 = $('#type_race_user_1_progress').val();
@@ -93,7 +95,6 @@ function updateProgress(userId, data) {
 }
 
 function arrayOfText() {
-    // var textTemplate=$("#templateText").text();
     var textTemplateCharArray = getTemplateText().split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
         textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
