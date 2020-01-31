@@ -132,8 +132,6 @@ function updateProgressBar(identifier,templateText,text){
     for(var i = currentCharIndex; i <= templateText.length - 1 ; i++) {
         if (text[currentCharIndex] === templateText[currentCharIndex]) {
             $(progressBar).css("width", percentage + "%" );
-            debugger
-
             // $("#newBar").animate({left: "+=500"}, 2000);
         }
     }
