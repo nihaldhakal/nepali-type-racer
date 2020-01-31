@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200130100258) do
+ActiveRecord::Schema.define(version: 20200131044753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,14 @@ ActiveRecord::Schema.define(version: 20200130100258) do
     t.datetime "updated_at", null: false
     t.integer "race_templates_id"
     t.integer "status", default: 0
+    t.integer "user_1_id"
+    t.integer "user_2_id"
+    t.integer "user_1_wpm"
+    t.integer "user_2_wpm"
+    t.integer "user_1_accuracy"
+    t.integer "user_2_accuracy"
+    t.text "user_1_progress"
+    t.text "user_2_progress"
   end
 
   create_table "users", force: :cascade do |t|
