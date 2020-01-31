@@ -38,6 +38,10 @@ $(document).on("turbolinks:load", function () {
         giveColorFeedback(getTemplateText(),getText());
         // updateProgressBar("#newBar"+ user_id ,text,template_text);
         updateWPM();
+
+        if (isGameOver() == true){
+            handleGameOver();
+        }
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/update_progress/" + text_id,
@@ -91,6 +95,9 @@ function fetchProgress() {
 
 function updateProgress(userId, data) {
     var text = data["user_"+ userId +"_progress"];
+    if (text == null){
+        text = ''
+    }
     updateProgressBar("#newBar"+ userId ,getTemplateText(),text);
 }
 
@@ -125,6 +132,8 @@ function updateProgressBar(identifier,templateText,text){
     for(var i = currentCharIndex; i <= templateText.length - 1 ; i++) {
         if (text[currentCharIndex] === templateText[currentCharIndex]) {
             $(progressBar).css("width", percentage + "%" );
+            debugger
+
             // $("#newBar").animate({left: "+=500"}, 2000);
         }
     }
