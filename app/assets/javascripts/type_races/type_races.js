@@ -100,26 +100,6 @@ function updateProgress(stat) {
     updateProgressBar($userRow.find('.bar'),getTemplateText(),text);
 }
 
-function arrayOfText() {
-    var textTemplateCharArray = getTemplateText().split("");
-    for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
-        textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
-    }
-    var textTemplateSpanified = textTemplateCharArray.join("");
-    $("#templateText").html(textTemplateSpanified);
-}
-
-function updateWPM(){
-    countCharacters += 1;
-    var currentTime=new Date($.now());
-    var timeInSecs = (currentTime-startTime)/1000;
-    var timeInMins = timeInSecs/60;
-    var wordsWritten = countCharacters/5;
-    var wpm = wordsWritten/timeInMins;
-    wpm = parseInt(wpm,10);
-    $('#checkWpm').text(wpm);
-}
-
 function updateProgressBar($progressBar,templateText,text){
     var percentage = 3 + getProgress(templateText,text);
     var currentCharIndex = text.length - 1;
@@ -152,13 +132,15 @@ function giveColorFeedback(templateText,text){
     }
 }
 
-function isGameOver(){
-    return (getTemplateText()===getText());
-}
-
-function handleGameOver() {
-    displayAccuracy();
-    disableInput();
+function updateWPM(){
+    countCharacters += 1;
+    var currentTime=new Date($.now());
+    var timeInSecs = (currentTime-startTime)/1000;
+    var timeInMins = timeInSecs/60;
+    var wordsWritten = countCharacters/5;
+    var wpm = wordsWritten/timeInMins;
+    wpm = parseInt(wpm,10);
+    $('#checkWpm').text(wpm);
 }
 
 function displayAccuracy() {
@@ -172,11 +154,33 @@ function displayAccuracy() {
     }else {
         $(' #accuracy2').text(accuracy);
     }
-
 }
+
+function isGameOver(){
+    return (getTemplateText()===getText());
+}
+
+function handleGameOver() {
+    displayAccuracy();
+    disableInput();
+}
+
 function disableInput() {
     $('.text').prop('disabled', true);
 }
+
+
+
+
+function arrayOfText() {
+    var textTemplateCharArray = getTemplateText().split("");
+    for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
+        textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
+    }
+    var textTemplateSpanified = textTemplateCharArray.join("");
+    $("#templateText").html(textTemplateSpanified);
+}
+
 
 var quotes = ["Hello there", "Genius is one percent inspiration and ninety-nine percent perspiration.", "You can observe a lot just by watching.",
     "A house divided against itself cannot stand.",
