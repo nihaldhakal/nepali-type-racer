@@ -65,12 +65,27 @@ $(document).on("turbolinks:load", function () {
         }
     });
 });
-
 function getTemplateText(){
     return $("#templateText").text();
 }
 function getText(){
     return $(".text").val();
+}
+
+
+function giveColorFeedback(templateText,text){
+    let currentCharIndex = 0 ;
+    for(let i = currentCharIndex; i < templateText.length  ; i++){
+        $("span #" + i).removeClass("match unmatch");
+    }
+    for (let i= currentCharIndex; i<text.length; i++){
+        if (text[i] == templateText[i]){
+            $("span #" + i).addClass("match").removeClass("unmatch");
+            // console.log($("span #" + i));
+        } else {
+            $("span #"  + i).removeClass("match").addClass("unmatch");
+        }
+    }
 }
 
 function fetchProgress() {
@@ -100,26 +115,6 @@ function updateProgress(stat) {
     updateProgressBar($userRow.find('.bar'),getTemplateText(),text);
 }
 
-function arrayOfText() {
-    var textTemplateCharArray = getTemplateText().split("");
-    for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
-        textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
-    }
-    var textTemplateSpanified = textTemplateCharArray.join("");
-    $("#templateText").html(textTemplateSpanified);
-}
-
-function updateWPM(){
-    countCharacters += 1;
-    var currentTime=new Date($.now());
-    var timeInSecs = (currentTime-startTime)/1000;
-    var timeInMins = timeInSecs/60;
-    var wordsWritten = countCharacters/5;
-    var wpm = wordsWritten/timeInMins;
-    wpm = parseInt(wpm,10);
-    $('#checkWpm').text(wpm);
-}
-
 function updateProgressBar($progressBar,templateText,text){
     var percentage = 3 + getProgress(templateText,text);
     var currentCharIndex = text.length - 1;
@@ -137,19 +132,15 @@ function getProgress(templateText,text){
     return ((text_length / quote_length) * 100);
 }
 
-function giveColorFeedback(templateText,text){
-    let currentCharIndex = 0 ;
-    for(let i = currentCharIndex; i < templateText.length  ; i++){
-        $("span #" + i).removeClass("match unmatch");
-    }
-    for (let i= currentCharIndex; i<text.length; i++){
-        if (text[i] == templateText[i]){
-            $("span #" + i).addClass("match").removeClass("unmatch");
-            // console.log($("span #" + i));
-        } else {
-            $("span #"  + i).removeClass("match").addClass("unmatch");
-        }
-    }
+function updateWPM(){
+    countCharacters += 1;
+    var currentTime=new Date($.now());
+    var timeInSecs = (currentTime-startTime)/1000;
+    var timeInMins = timeInSecs/60;
+    var wordsWritten = countCharacters/5;
+    var wpm = wordsWritten/timeInMins;
+    wpm = parseInt(wpm,10);
+    $('#checkWpm').text(wpm);
 }
 
 function isGameOver(){
@@ -159,6 +150,10 @@ function isGameOver(){
 function handleGameOver() {
     displayAccuracy();
     disableInput();
+}
+
+function disableInput() {
+    $('.text').prop('disabled', true);
 }
 
 function displayAccuracy() {
@@ -174,16 +169,22 @@ function displayAccuracy() {
     }
 
 }
-function disableInput() {
-    $('.text').prop('disabled', true);
-}
 
-var quotes = ["Hello there", "Genius is one percent inspiration and ninety-nine percent perspiration.", "You can observe a lot just by watching.",
-    "A house divided against itself cannot stand.",
-    "Difficulties increase the nearer we get to the goal.","Fate is in your hands and no one elses",
-    "Be the chief but never the lord.","Nothing happens unless first we dream.","Well begun is half done.", "Life is a learning experience," +
-    " only if you learn."
-    ,"Self-complacency is fatal to progress.","Peace comes from within. Do not seek it without.","What you give is what you get.",
-    "We can only learn to love by loving.","Life is change. Growth is optional. Choose wisely.","You'll see it when you believe it."
-    ,"Today is the tomorrow we worried about yesterday.","It's easier to see the mistakes on someone else's paper."
-    , "Every man dies. Not every man really lives.","To lead people walk behind them.","Having nothing, nothing can he lose."]
+// function arrayOfText() {
+//     var textTemplateCharArray = getTemplateText().split("");
+//     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
+//         textTemplateCharArray[spanCount] = '<span id= "'+spanCount +'">' + textTemplateCharArray[spanCount] + '</span>';
+//     }
+//     var textTemplateSpanified = textTemplateCharArray.join("");
+//     $("#templateText").html(textTemplateSpanified);
+// }
+//
+// var quotes = ["Hello there", "Genius is one percent inspiration and ninety-nine percent perspiration.", "You can observe a lot just by watching.",
+//     "A house divided against itself cannot stand.",
+//     "Difficulties increase the nearer we get to the goal.","Fate is in your hands and no one elses",
+//     "Be the chief but never the lord.","Nothing happens unless first we dream.","Well begun is half done.", "Life is a learning experience," +
+//     " only if you learn."
+//     ,"Self-complacency is fatal to progress.","Peace comes from within. Do not seek it without.","What you give is what you get.",
+//     "We can only learn to love by loving.","Life is change. Growth is optional. Choose wisely.","You'll see it when you believe it."
+//     ,"Today is the tomorrow we worried about yesterday.","It's easier to see the mistakes on someone else's paper."
+//     , "Every man dies. Not every man really lives.","To lead people walk behind them.","Having nothing, nothing can he lose."]
