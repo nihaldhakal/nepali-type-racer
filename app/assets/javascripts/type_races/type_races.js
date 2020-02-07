@@ -26,15 +26,12 @@ $(document).on("turbolinks:load", function () {
     $(".text").keyup(function () {
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
-        var user_1 = $('#type_race_user_1_progress').val();
-        var user_2 = $('#type_race_user_2_progress').val();
-        var user_1_wpm = $('#checkWpm1').text();
-        var user_2_wpm = $('#checkWpm2').text();
-        var user_1_accuracy = $('#accuracy1').text();
-        var user_2_accuracy = $('#accuracy2').text();
+        var user_progress = $('#type_race_stat_progress').val();
+        var user_wpm = $('#checkWpm').text();
+        var user_accuracy = $('#accuracy1').text();
         // Passing data as a object.
-        var data= {type_race: {"user_id": user_id,"user_1_progress": user_1,"user_2_progress": user_2,"user_1_wpm": user_1_wpm,
-                "user_2_wpm": user_2_wpm,"user_1_accuracy": user_1_accuracy,"user_2_accuracy": user_2_accuracy}};
+        var data= {type_race_stat: {"user_id": user_id,"progress": user_progress,"wpm": user_wpm,
+                "accuracy": user_accuracy}};
         giveColorFeedback(getTemplateText(),getText());
         // updateProgressBar("#newBar"+ user_id ,text,template_text);
         updateWPM();
@@ -44,7 +41,7 @@ $(document).on("turbolinks:load", function () {
         }
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
-            url: "/type_races/update_progress/" + text_id,
+            url: "/type_races/" + text_id + "/update_progress",
             type: "PUT",
             dataType: 'json',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -77,6 +74,7 @@ function getText(){
 }
 
 function fetchProgress() {
+    var total_user = $('#user_count').data('user-count');
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
         url: "/type_races/fetch_progress/" + $('#current_id').val(),
@@ -84,21 +82,22 @@ function fetchProgress() {
         dataType: "json",
         data: {},
         success:function (data,status,jqXHR) {
-            updateProgress(1, data);
-            updateProgress(2, data);
-
+            $.each(data,function(index,stat) {
+                updateProgress(stat);
+            });
         },
         error: function (a,b,c) {
         }
     });
 }
 
-function updateProgress(userId, data) {
-    var text = data["user_"+ userId +"_progress"];
+function updateProgress(stat) {
+    var text = stat.progress;
     if (text == null){
         text = ''
     }
-    updateProgressBar("#newBar"+ userId ,getTemplateText(),text);
+    var $userRow = $('.user_row[data-id='+ stat.user_id + ']');
+    updateProgressBar($userRow.find('.bar'),getTemplateText(),text);
 }
 
 function arrayOfText() {
@@ -118,24 +117,20 @@ function updateWPM(){
     var wordsWritten = countCharacters/5;
     var wpm = wordsWritten/timeInMins;
     wpm = parseInt(wpm,10);
-    if ($("field").data('user-id') == 1){
-        $('#checkWpm1').text(wpm);
-    }else {
-        $('#checkWpm2').text(wpm);
-    }
+    $('#checkWpm').text(wpm);
 }
 
-function updateProgressBar(identifier,templateText,text){
+function updateProgressBar($progressBar,templateText,text){
     var percentage = 3 + getProgress(templateText,text);
-    var progressBar = $(identifier);
     var currentCharIndex = text.length - 1;
     for(var i = currentCharIndex; i <= templateText.length - 1 ; i++) {
         if (text[currentCharIndex] === templateText[currentCharIndex]) {
-            $(progressBar).css("width", percentage + "%" );
+            $progressBar.css("width", percentage + "%" );
             // $("#newBar").animate({left: "+=500"}, 2000);
         }
     }
 }
+
 function getProgress(templateText,text){
     var text_length = text.length;
     var quote_length = templateText.length;
@@ -182,10 +177,6 @@ function displayAccuracy() {
 function disableInput() {
     $('.text').prop('disabled', true);
 }
-
-
-
-
 
 var quotes = ["Hello there", "Genius is one percent inspiration and ninety-nine percent perspiration.", "You can observe a lot just by watching.",
     "A house divided against itself cannot stand.",

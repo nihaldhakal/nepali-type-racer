@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   root to: "type_races#index"
   get 'type_races/:id', to: 'type_races#show', as: 'type_race'
   # post 'type_races/create'
-  put 'type_races/update_progress/:id', to: 'type_races#update_progress'
+  put 'type_races/:id/update_progress', to: 'type_races#update_progress'
   resources :race_templates
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
