@@ -21,21 +21,25 @@ $(document).on("turbolinks:load", function () {
         if ($("#type_race_status").data("type_race_status") == "ongoing"){
             setInterval(fetchProgress,1000);
         }
-
     }
+
     $(".text").keyup(function () {
+        if (startTime === undefined) {
+            startTime = new Date($.now());
+        }
+        var modifierKeyKeyCodes = [16,17,18,20,27,37,38,39,40,46];
+        if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
+            userKeyPressCount++;
+        }
+        countCharacters += 1;
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_progress = $('#type_race_stat_progress').val();
-        var user_wpm = $('#checkWpm').text();
         var user_accuracy = $('#accuracy1').text();
         // Passing data as a object.
-        var data= {type_race_stat: {"user_id": user_id,"progress": user_progress,"wpm": user_wpm,
+        var data= {type_race_stat: {"user_id": user_id,"progress": user_progress,"wpm": updateWPM(),
                 "accuracy": user_accuracy}};
         giveColorFeedback(getTemplateText(),getText());
-        // updateProgressBar("#newBar"+ user_id ,text,template_text);
-        updateWPM();
-
         if (isGameOver() == true){
             handleGameOver();
         }
@@ -52,17 +56,6 @@ $(document).on("turbolinks:load", function () {
             error: function (a,b,c) {
             }
         });
-
-    });
-
-    $(".text").on("input",function(event){
-        if (startTime === undefined) {
-            startTime = new Date($.now());
-        }
-        var modifierKeyKeyCodes = [16,17,18,20,27,37,38,39,40,46];
-        if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
-            userKeyPressCount++;
-        }
     });
 });
 
@@ -74,7 +67,7 @@ function getText(){
 }
 
 function fetchProgress() {
-    var total_user = $('#user_count').data('user-count');
+    // var total_user = $('#user_count').data('user-count');
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
         url: "/type_races/fetch_progress/" + $('#current_id').val(),
@@ -84,6 +77,7 @@ function fetchProgress() {
         success:function (data,status,jqXHR) {
             $.each(data,function(index,stat) {
                 updateProgress(stat);
+                displayWpm(stat);
             });
         },
         error: function (a,b,c) {
@@ -125,7 +119,6 @@ function giveColorFeedback(templateText,text){
     for (let i= currentCharIndex; i<text.length; i++){
         if (text[i] == templateText[i]){
             $("span #" + i).addClass("match").removeClass("unmatch");
-            // console.log($("span #" + i));
         } else {
             $("span #"  + i).removeClass("match").addClass("unmatch");
         }
@@ -133,14 +126,21 @@ function giveColorFeedback(templateText,text){
 }
 
 function updateWPM(){
-    countCharacters += 1;
     var currentTime=new Date($.now());
+    if (isNaN(startTime) == true){
+        startTime = new Date($.now());
+    }
     var timeInSecs = (currentTime-startTime)/1000;
     var timeInMins = timeInSecs/60;
     var wordsWritten = countCharacters/5;
     var wpm = wordsWritten/timeInMins;
     wpm = parseInt(wpm,10);
-    $('#checkWpm').text(wpm);
+    return wpm
+    // $('#checkWpm'+ stat.user_id +'').text(wpm);
+}
+
+function displayWpm(stat) {
+     $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
 }
 
 function displayAccuracy() {
@@ -169,9 +169,6 @@ function disableInput() {
     $('.text').prop('disabled', true);
 }
 
-
-
-
 function arrayOfText() {
     var textTemplateCharArray = getTemplateText().split("");
     for(var spanCount=0; spanCount < textTemplateCharArray.length; spanCount++) {
@@ -180,7 +177,6 @@ function arrayOfText() {
     var textTemplateSpanified = textTemplateCharArray.join("");
     $("#templateText").html(textTemplateSpanified);
 }
-
 
 var quotes = ["Hello there", "Genius is one percent inspiration and ninety-nine percent perspiration.", "You can observe a lot just by watching.",
     "A house divided against itself cannot stand.",

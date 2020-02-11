@@ -16,12 +16,6 @@ class TypeRacesController < ApplicationController
     @type_race = TypeRace.find(params[:id])
     @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
     @type_race_stat = @type_race.type_race_stats.find_by(user_id: current_user.id)
-    # @type_race_stat_arr.each do |type_race_stat|
-    #   debugger
-    #   if type_race_stat.user_id == current_user.id
-    #     @type_race_stat = type_race_stat
-    #   end
-    # end
     if @type_race.status == "ongoing"
       @users = TypeRace.last.users
     end
