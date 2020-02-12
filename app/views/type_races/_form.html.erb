@@ -20,11 +20,19 @@
   <% end %>
   <br>
   <%= form_for(@type_race_stat,url: type_race_path(@type_race_stat), remote:true) do |form| %>
-      <%= content_tag :field,  data: {user_id: current_user.id} do %>
-        <div class="form-group form-control-lg">
-          <%= form.text_field :progress, class:  "form-control text", remote:true %>
-        </div>
+    <%= content_tag :field,  data: {user_id: current_user.id} do %>
+      <div class="form-group form-control-lg">
+        <%= form.text_field :progress, class:  "form-control text", remote:true %>
+      </div>
     <% end %>
+    <div class="hidden" id="showData">
+      <% @users.each do |user|  %>
+        <% if user.id == current_user.id %>
+          <p class="h3" data-user-name="<%= user.user_name %>"></p>
+        <% end %>
+      <% end %>
+      <h2>Accuracy : <span id="accuracy"> 0 </span></h2>
+    </div>
 
     <div class="check">
       <span class ="match"> </span>
@@ -36,19 +44,11 @@
     </div>
   <% end %>
 
-  <!----------------------------------------------------------------------------------------------------------------------------->
-
   <div class="input">
     <h1><span id="displayedText"></span>
       <span class ="match"> </span>
       <span class ="unmatch"></span>
     </h1>
-  </div>
-  <div>
-    <div class="hidden" id="showAccuracy">
-      <p >Accuracy : <span id="accuracy1"> 0 </span></p>
-    </div>
-    <%# end %>
   </div>
 
 </div>

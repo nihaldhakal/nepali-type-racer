@@ -35,14 +35,14 @@ $(document).on("turbolinks:load", function () {
         var user_id = $("field").data('user-id');
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_progress = $('#type_race_stat_progress').val();
-        var user_accuracy = $('#accuracy1').text();
         // Passing data as a object.
         var data= {type_race_stat: {"user_id": user_id,"progress": user_progress,"wpm": updateWPM(),
-                "accuracy": user_accuracy}};
+                "accuracy": updateAccuracy()}};
         giveColorFeedback(getTemplateText(),getText());
         if (isGameOver() == true){
             handleGameOver();
         }
+
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/" + text_id + "/update_progress",
@@ -78,6 +78,7 @@ function fetchProgress() {
             $.each(data,function(index,stat) {
                 updateProgress(stat);
                 displayWpm(stat);
+                // $('.hidden').find("p").text($("p").data('user-name') + " your speed of the race is " + $('.user_row[data-id = '+ stat.user_id +']').find('span').text());
             });
         },
         error: function (a,b,c) {
@@ -140,20 +141,21 @@ function updateWPM(){
 }
 
 function displayWpm(stat) {
-     $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
+    var user_id = $("field").data('user-id');
+    $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
 }
 
-function displayAccuracy() {
+function updateAccuracy() {
     var textCharLen= getTemplateText().length;
     var userKeyPressInputCharLen=userKeyPressCount;
     var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
-    $('#showAccuracy').removeClass("hidden");
-    if ($("field").data('user-id') == 1){
-        $(' #accuracy1').text(accuracy);
-    }else {
-        $(' #accuracy2').text(accuracy);
-    }
+    return accuracy
+}
+
+function displayAccuracy() {
+    $('#showData').removeClass("hidden");
+    $('#accuracy').text(updateAccuracy());
 }
 
 function isGameOver(){
