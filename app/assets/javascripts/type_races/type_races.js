@@ -40,7 +40,7 @@ $(document).on("turbolinks:load", function () {
                 "accuracy": updateAccuracy()}};
         giveColorFeedback(getTemplateText(),getText());
         if (isGameOver() == true){
-            handleGameOver();
+            handleGameOver(updateWPM());
         }
 
         // Ajax for update_progress where users data are updated in the database.
@@ -67,6 +67,8 @@ function getText(){
 }
 
 function fetchProgress() {
+    var user_id = $("field").data('user-id');
+
     // var total_user = $('#user_count').data('user-count');
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
@@ -78,7 +80,6 @@ function fetchProgress() {
             $.each(data,function(index,stat) {
                 updateProgress(stat);
                 displayWpm(stat);
-                // $('.hidden').find("p").text($("p").data('user-name') + " your speed of the race is " + $('.user_row[data-id = '+ stat.user_id +']').find('span').text());
             });
         },
         error: function (a,b,c) {
@@ -122,7 +123,7 @@ function giveColorFeedback(templateText,text){
             $("span #" + i).addClass("match").removeClass("unmatch");
         } else {
             $("span #"  + i).removeClass("match").addClass("unmatch");
-        }
+        }updateWPM
     }
 }
 
@@ -154,16 +155,23 @@ function updateAccuracy() {
 }
 
 function displayAccuracy() {
-    $('#showData').removeClass("hidden");
-    $('#accuracy').text(updateAccuracy());
+
+
 }
 
 function isGameOver(){
     return (getTemplateText()===getText());
 }
 
-function handleGameOver() {
-    displayAccuracy();
+function displayEndStats(wpm){
+    $('#showData').removeClass("hidden");
+    $('#showData').find("p").text($("p").data('user-name') + " your speed of the race is " + wpm);
+    $('#accuracy').text(updateAccuracy());
+}
+
+
+function handleGameOver(wpm) {
+    displayEndStats(wpm);
     disableInput();
 }
 

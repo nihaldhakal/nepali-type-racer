@@ -26,7 +26,7 @@ class TypeRacesController < ApplicationController
     type_race_stat_last = TypeRaceStat.last
     # if pending_race && pending_race.time_remaining?
     if pending_race
-      pending_race.update(status: "ongoing")
+      pending_race.update(status: "countdown_is_set")
       type_race_stat =TypeRaceStat.create(user_id: current_user.id, type_race_id: type_race_stat_last.type_race_id)
       redirect_to type_race_path(pending_race)
       # if time_count == true
@@ -51,6 +51,9 @@ class TypeRacesController < ApplicationController
   def update_progress
     type_race = TypeRace.find(params[:id])
     return if type_race.nil?
+    if type_race.status == "countdown_is_set"
+
+    end
     if type_race.status == "ongoing"
       type_race_stat = type_race.type_race_stats.find_by(user_id: current_user.id)
       type_race_stat.update(type_race_stat_params)
@@ -71,14 +74,20 @@ class TypeRacesController < ApplicationController
   end
 
   def time_count
-    # time_count_in_seconds = 0
+    @time_count_in_seconds = 0
     10.downto(0) do |index|
       sleep 1
-      # time_count_in_seconds =index
-      if index > 3
-        return true
-      end
+      @time_count_in_seconds =index
+      start
+      puts @time_count_in_seconds
     end
   end
+
+  def start
+    if @time_count_in_seconds <= 3
+      puts "Fine"
+    end
+  end
+
 end
 
