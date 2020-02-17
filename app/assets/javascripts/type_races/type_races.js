@@ -12,11 +12,28 @@ $(document).on("turbolinks:load", function () {
     // The controller must be type_race and its action must be show do take following action. (Using data-attributes)
     if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
     {
+        if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
+            displayTime();
+        }
         // If the type_race status is pending than keep on reloading page until its status changes.
         if ($("#type_race_status").data("type_race_status") == "pending"){
             setInterval(function () {
-                location.reload();
-            },3000);
+                $.ajax({
+                    url: "/type_races/" + text_id ,
+                    type: "GET",
+                    dataType: 'json',
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    crossOrigin: true,
+                    data : {},
+                    success: function (data,status,jqXHR) {
+                        if ( data.status == "countdown_is_set") {
+                            location.reload();
+                        }
+                    },
+                    error: function (a,b,c) {
+                    }
+                });
+            },1000);
         }
         if ($("#type_race_status").data("type_race_status") == "ongoing"){
             setInterval(fetchProgress,1000);
@@ -59,9 +76,24 @@ $(document).on("turbolinks:load", function () {
     });
 });
 
+function displayTime() {
+    var start = 10;
+    var killInterval = setInterval(function () {
+                $('.timer').find('span').text("Race starts at:" + start);
+                start-=1;
+                if(start < 1){
+                    clearInterval(killInterval);
+                }
+        },1000);
+}
+
+function hideTime() {
+    $(".timer").hide();
+}
 function getTemplateText(){
     return $("#templateText").text();
 }
+
 function getText(){
     return $(".text").val();
 }
@@ -123,7 +155,7 @@ function giveColorFeedback(templateText,text){
             $("span #" + i).addClass("match").removeClass("unmatch");
         } else {
             $("span #"  + i).removeClass("match").addClass("unmatch");
-        }updateWPM
+        }
     }
 }
 

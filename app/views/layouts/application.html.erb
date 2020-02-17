@@ -23,6 +23,7 @@
     <% flash.each do |message,message_type| %>
       <div class="alert alert-<%= message%>"><%= message_type %></div>
     <%end %>
+
     <%= yield %>
   </div>
   </body>

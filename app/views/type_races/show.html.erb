@@ -1,4 +1,7 @@
 <%= render 'users' %>
+<div class="hiddenField">
+  <input type="hidden" id="text_id" value="<%= @type_race.id %>"  >
+</div>
 <%= hidden_field_tag :current_id, params[:id] %>
 <%= content_tag "div", id: "type_race_status", 'data-type_race_status' => @type_race.status do %><% end %>
 <% if @type_race.status == "pending" %>
