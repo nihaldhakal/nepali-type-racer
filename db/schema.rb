@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200216044015) do
+ActiveRecord::Schema.define(version: 20200217090343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20200216044015) do
     t.datetime "updated_at", null: false
     t.integer "race_templates_id"
     t.integer "status", default: 0
-    t.datetime "timestamps"
+    t.datetime "countdown_started"
   end
 
   create_table "users", force: :cascade do |t|

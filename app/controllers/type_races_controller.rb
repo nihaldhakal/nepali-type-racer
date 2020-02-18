@@ -3,7 +3,7 @@ class TypeRacesController < ApplicationController
   def index
     @type_race = TypeRace.last
     if @type_race.present?
-      @type_race.update_attribute(:status ,"canceled")
+      @type_race.update(status: "canceled")
       if user_logged_in? && @type_race.canceled?
         destroy_race
       end
@@ -17,6 +17,9 @@ class TypeRacesController < ApplicationController
     if @type_race.status == "countdown_is_set"
       @users = TypeRace.last.users
     end
+    if @type_race.status == "countdown_is_set" and Time.now-@type_race.countdown_started >11
+      @type_race.update(status: "ongoing")
+    end
     respond_to  do |format|
       format.html
       format.js do
@@ -29,7 +32,7 @@ class TypeRacesController < ApplicationController
     type_race_stat_last = TypeRaceStat.last
     if race = (TypeRace.countdown_is_set.last || TypeRace.pending.last)
       type_race_stat = TypeRaceStat.create(user_id: current_user.id, type_race_id: type_race_stat_last.type_race_id)
-      race.update(status: "countdown_is_set", timestamps: Time.now) if race.pending?
+      race.update(status: "countdown_is_set", countdown_started: Time.now) if race.pending?
     else
       templates = RaceTemplate.all.sample.id
       race = TypeRace.create(race_templates_id: templates)
@@ -74,20 +77,19 @@ class TypeRacesController < ApplicationController
       sleep 1
       @time_count_in_seconds =index
     end
-    start
   end
 
-  def start
-    count_down_is_set = TypeRace.countdown_is_set.last
-    if @time_count_in_seconds <= 0
-      count_down_is_set.update(status: "ongoing")
-    end
-
-    if @time_count_in_seconds <= 3
-      # Don't let users to enter the race
-      redirect_to type_races_create_or_join_path
-    end
-  end
+  # def start
+  #   count_down_is_set = TypeRace.countdown_is_set.last
+  #   if @time_count_in_seconds <= 0
+  #     count_down_is_set.update(status: "ongoing")
+  #   end
+  #
+  #   if @time_count_in_seconds <= 3
+  #     # Don't let users to enter the race
+  #     redirect_to type_races_create_or_join_path
+  #   end
+  # end
 
 end
 

@@ -19,32 +19,54 @@ $(document).on("turbolinks:load", function () {
         if ($("#type_race_status").data("type_race_status") == "pending"){
             setInterval(function () {
                 $.ajax({
-                    url: "/type_races/" + text_id ,
+                    url: "/type_races/" + text_id,
                     type: "GET",
                     dataType: 'json',
                     headers: {'X-Requested-With': 'XMLHttpRequest'},
                     crossOrigin: true,
-                    data : {},
-                    success: function (data,status,jqXHR) {
-                        if ( data.status == "countdown_is_set") {
+                    data: {},
+                    success: function (data, status, jqXHR) {
+                        if (data.status == "countdown_is_set") {
                             location.reload();
                         }
                     },
-                    error: function (a,b,c) {
+                    error: function (a, b, c) {
                     }
                 });
-            },1000);
+            }, 1000);
         }
-        if ($("#type_race_status").data("type_race_status") == "ongoing"){
-            setInterval(fetchProgress,1000);
+        if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
+            var setOngoingStatus = setInterval(function () {
+                $.ajax({
+                    url: "/type_races/" + text_id,
+                    type: "GET",
+                    dataType: 'json',
+                    headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    crossOrigin: true,
+                    data: {},
+                    success: function (data, status, jqXHR) {
+                        if (data.status == "ongoing") {
+                            $("#type_race_status").attr("data-type_race_status", data.status);
+                            hideTime();
+                            fetchProgress();
+                        }
+                    },
+                    error: function (a, b, c) {
+                    }
+                });
+            }, 1000);
         }
+        // if ($("#type_race_status").data("type_race_status") == "ongoing") {
+        //     hideTime();
+        //     setInterval(fetchProgress, 1000);
+        // }
     }
 
     $(".text").keyup(function () {
         if (startTime === undefined) {
             startTime = new Date($.now());
         }
-        var modifierKeyKeyCodes = [16,17,18,20,27,37,38,39,40,46];
+        var modifierKeyKeyCodes = [16, 17, 18, 20, 27, 37, 38, 39, 40, 46];
         if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
             userKeyPressCount++;
         }
@@ -53,10 +75,14 @@ $(document).on("turbolinks:load", function () {
         // var other_user_id = user_id == 1 ? 2 : 1;
         var user_progress = $('#type_race_stat_progress').val();
         // Passing data as a object.
-        var data= {type_race_stat: {"user_id": user_id,"progress": user_progress,"wpm": updateWPM(),
-                "accuracy": updateAccuracy()}};
-        giveColorFeedback(getTemplateText(),getText());
-        if (isGameOver() == true){
+        var data = {
+            type_race_stat: {
+                "user_id": user_id, "progress": user_progress, "wpm": updateWPM(),
+                "accuracy": updateAccuracy()
+            }
+        };
+        giveColorFeedback(getTemplateText(), getText());
+        if (isGameOver() == true) {
             handleGameOver(updateWPM());
         }
 
@@ -67,10 +93,10 @@ $(document).on("turbolinks:load", function () {
             dataType: 'json',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             crossOrigin: true,
-            data :  data,
-            success: function (data,status,jqXHR) {
+            data: data,
+            success: function (data, status, jqXHR) {
             },
-            error: function (a,b,c) {
+            error: function (a, b, c) {
             }
         });
     });
@@ -79,17 +105,18 @@ $(document).on("turbolinks:load", function () {
 function displayTime() {
     var start = 10;
     var killInterval = setInterval(function () {
-                $('.timer').find('span').text("Race starts at:" + start);
-                start-=1;
-                if(start < 1){
-                    clearInterval(killInterval);
-                }
-        },1000);
+        $('.timer').find('span').text("Race starts at:" + start);
+        start-=1;
+        if(start < 1){
+            clearInterval(killInterval);
+        }
+    },1000);
 }
 
 function hideTime() {
     $(".timer").hide();
 }
+
 function getTemplateText(){
     return $("#templateText").text();
 }
@@ -99,8 +126,7 @@ function getText(){
 }
 
 function fetchProgress() {
-    var user_id = $("field").data('user-id');
-
+    // var user_id = $("field").data('user-id');
     // var total_user = $('#user_count').data('user-count');
     // Ajax for fetching progress from the database and displaying it to another player.
     $.ajax({
