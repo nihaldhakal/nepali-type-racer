@@ -36,7 +36,7 @@ $(document).on("turbolinks:load", function () {
             }, 1000);
         }
         if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
-            var setOngoingStatus = setInterval(function () {
+             setInterval(function () {
                 $.ajax({
                     url: "/type_races/" + text_id,
                     type: "GET",
