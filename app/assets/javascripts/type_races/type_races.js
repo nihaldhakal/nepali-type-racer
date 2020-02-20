@@ -1,7 +1,7 @@
 var countCharacters=0;
 var startTime;
 var userKeyPressCount=0;
-
+window.intervalIds = []
 $(document).on("turbolinks:load", function () {
     arrayOfText();
     var text_id = $("#text_id").val();
@@ -10,14 +10,12 @@ $(document).on("turbolinks:load", function () {
         $('.text').val("");
     });
     // The controller must be type_race and its action must be show do take following action. (Using data-attributes)
-    if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) )
-    {
+    if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) ) {
         if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
             displayTime();
         }
-        // If the type_race status is pending than keep on reloading page until its status changes.
-        if ($("#type_race_status").data("type_race_status") == "pending"){
-            setInterval(function () {
+        var intervalId = setInterval(function () {
+            if ($("#type_race_status").data("type_race_status") == "pending") {
                 $.ajax({
                     url: "/type_races/" + text_id,
                     type: "GET",
@@ -33,10 +31,8 @@ $(document).on("turbolinks:load", function () {
                     error: function (a, b, c) {
                     }
                 });
-            }, 1000);
-        }
-        if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
-             setInterval(function () {
+            }
+            if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
                 $.ajax({
                     url: "/type_races/" + text_id,
                     type: "GET",
@@ -51,15 +47,16 @@ $(document).on("turbolinks:load", function () {
                             fetchProgress();
                         }
                     },
-                    error: function (a, b, c) {
-                    }
                 });
-            }, 1000);
+            }
+        }, 1000);
+        if ($("#type_race_status").data("type_race_status") == "ongoing") {
+           setInterval((fetchProgress), 1000);
+            if ($("#type_race_status").data("type_race_status") != "ongoing"){
+                clearInterval(ongoingInterval);
+            }
         }
-        // if ($("#type_race_status").data("type_race_status") == "ongoing") {
-        //     hideTime();
-        //     setInterval(fetchProgress, 1000);
-        // }
+            // window.intervalIds.push(intervalId);
     }
 
     $(".text").keyup(function () {
@@ -111,6 +108,7 @@ function displayTime() {
             clearInterval(killInterval);
         }
     },1000);
+    window.intervalIds.push(killInterval)
 }
 
 function hideTime() {
