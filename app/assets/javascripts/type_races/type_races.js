@@ -1,7 +1,8 @@
 var countCharacters=0;
 var startTime;
 var userKeyPressCount=0;
-window.intervalIds = []
+window.intervalIds = [];
+var currentTime;
 $(document).on("turbolinks:load", function () {
     arrayOfText();
     var text_id = $("#text_id").val();
@@ -13,6 +14,7 @@ $(document).on("turbolinks:load", function () {
     if (((($("body").data("controller")) == "type_races") && ($("body").data("action")) == "show" ) ) {
         if ($("#type_race_status").data("type_race_status") == "countdown_is_set") {
             displayTime();
+            disableInput();
         }
         var intervalId = setInterval(function () {
             if ($("#type_race_status").data("type_race_status") == "pending") {
@@ -44,25 +46,23 @@ $(document).on("turbolinks:load", function () {
                         if (data.status == "ongoing") {
                             $("#type_race_status").attr("data-type_race_status", data.status);
                             hideTime();
+                            enableInput();
                             fetchProgress();
                         }
                     },
                 });
             }
-        }, 1000);
+        }, 3000);
         if ($("#type_race_status").data("type_race_status") == "ongoing") {
-           setInterval((fetchProgress), 1000);
-            if ($("#type_race_status").data("type_race_status") != "ongoing"){
-                clearInterval(ongoingInterval);
-            }
+            setInterval((fetchProgress), 3000);
+            // if ($("#type_race_status").data("type_race_status") != "ongoing"){
+            //     clearInterval(ongoingInterval);
+            // }
         }
-            // window.intervalIds.push(intervalId);
+        // window.intervalIds.push(intervalId);
     }
 
     $(".text").keyup(function () {
-        if (startTime === undefined) {
-            startTime = new Date($.now());
-        }
         var modifierKeyKeyCodes = [16, 17, 18, 20, 27, 37, 38, 39, 40, 46];
         if (modifierKeyKeyCodes.includes(event.keyCode) == false) {
             userKeyPressCount++;
@@ -74,15 +74,14 @@ $(document).on("turbolinks:load", function () {
         // Passing data as a object.
         var data = {
             type_race_stat: {
-                "user_id": user_id, "progress": user_progress, "wpm": updateWPM(),
+                "user_id": user_id, "progress": user_progress,
                 "accuracy": updateAccuracy()
             }
         };
-        giveColorFeedback(getTemplateText(), getText());
+        displayColorFeedback(getTemplateText(), getText());
         if (isGameOver() == true) {
-            handleGameOver(updateWPM());
+            data.type_race_stat.wpm = getWpm(countCharacters);
         }
-
         // Ajax for update_progress where users data are updated in the database.
         $.ajax({
             url: "/type_races/" + text_id + "/update_progress",
@@ -94,6 +93,13 @@ $(document).on("turbolinks:load", function () {
             success: function (data, status, jqXHR) {
             },
             error: function (a, b, c) {
+            },
+            complete: function () {
+                $.each(data,function(index,stat){
+                    if (user_id == stat.user_id && stat.progress == getTemplateText() ) {
+                        handleGameOver(getWpm(countCharacters));
+                    }
+                });
             }
         });
     });
@@ -134,8 +140,11 @@ function fetchProgress() {
         data: {},
         success:function (data,status,jqXHR) {
             $.each(data,function(index,stat) {
+                currentTime=new Date($.now());
+                if(stat.progress != null){
+                    displayWpm(stat);
+                }
                 updateProgress(stat);
-                displayWpm(stat);
             });
         },
         error: function (a,b,c) {
@@ -169,7 +178,7 @@ function getProgress(templateText,text){
     return ((text_length / quote_length) * 100);
 }
 
-function giveColorFeedback(templateText,text){
+function displayColorFeedback(templateText,text){
     let currentCharIndex = 0 ;
     for(let i = currentCharIndex; i < templateText.length  ; i++){
         $("span #" + i).removeClass("match unmatch");
@@ -183,8 +192,8 @@ function giveColorFeedback(templateText,text){
     }
 }
 
-function updateWPM(){
-    var currentTime=new Date($.now());
+function getWpm(countCharacters){
+    // var currentTime=new Date($.now());
     if (isNaN(startTime) == true){
         startTime = new Date($.now());
     }
@@ -199,7 +208,16 @@ function updateWPM(){
 
 function displayWpm(stat) {
     var user_id = $("field").data('user-id');
-    $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
+    // if (isGameOver() == true && stat.user_id == user_id){
+    //     $('.user_row[data-id = '+ user_id +']').find('.wpm span').text(stat.wpm);
+    // }else{
+    if(stat.progress === getTemplateText()){
+        $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
+    }else{
+        $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(getWpm(stat.progress.length));
+    }
+    
+    // $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
 }
 
 function updateAccuracy() {
@@ -207,16 +225,7 @@ function updateAccuracy() {
     var userKeyPressInputCharLen=userKeyPressCount;
     var accuracy = ( textCharLen/userKeyPressInputCharLen )*100;
     accuracy=Math.round( accuracy );
-    return accuracy
-}
-
-function displayAccuracy() {
-
-
-}
-
-function isGameOver(){
-    return (getTemplateText()===getText());
+    return accuracy;
 }
 
 function displayEndStats(wpm){
@@ -225,6 +234,9 @@ function displayEndStats(wpm){
     $('#accuracy').text(updateAccuracy());
 }
 
+function isGameOver(){
+    return (getTemplateText()===getText());
+}
 
 function handleGameOver(wpm) {
     displayEndStats(wpm);
@@ -233,6 +245,13 @@ function handleGameOver(wpm) {
 
 function disableInput() {
     $('.text').prop('disabled', true);
+}
+
+function enableInput() {
+    $('.text').prop('disabled', false);
+    if (startTime === undefined) {
+        startTime = new Date($.now());
+    }
 }
 
 function arrayOfText() {

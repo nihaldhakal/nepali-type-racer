@@ -2,15 +2,27 @@ class TypeRacesController < ApplicationController
   # access all: [:show, :index], user: {except: [:destroy]}, company_admin: :all
   def index
     @type_race = TypeRace.last
+    @type_races = TypeRace.find_by(status: "ongoing")
     # if @type_race.completed? == false
     #   @type_race.update(status:"canceled")
     #   destroy_race
     # end
     if @type_race.present?
-      if @type_race.pending? or (@type_race.completed? == false and Time.now-@type_race.countdown_started > 180)
+      # if @type_race.pending? or ( (@type_race.ongoing?) && Time.now-@type_race.countdown_started > 180)
+      # @type_race_stat = @type_race.type_race_stats.find_by(user_id: current_user.id)
+      @type_race_stat = TypeRaceStat.where(status: "joined")
+      if @type_race.pending?
         @type_race.update(status: "canceled")
         if user_logged_in? && @type_race.canceled?
           destroy_race
+        end
+      end
+
+      if @type_race_stat.present?
+        if @type_races.countdown_started?
+          if (Time.now-@type_races.countdown_started>180)
+            @type_race_stat.delete_all
+          end
         end
       end
     end
@@ -20,14 +32,13 @@ class TypeRacesController < ApplicationController
     @type_race = TypeRace.find(params[:id])
     @templates = RaceTemplate.find_by_id(@type_race.race_templates_id)
     @type_race_stat = @type_race.type_race_stats.find_by(user_id: current_user.id)
-    if @type_race.status == "countdown_is_set" or @type_race.ongoing?
-      @users = TypeRace.find_by_id(@type_race).users
-    end
+    @users = @type_race.users
+    # if @type_race.status == "countdown_is_set" or @type_race.ongoing?
+    #   @type_race_stat.update(status: "left")
+    # end
+
     if @type_race.status == "countdown_is_set" and Time.now-@type_race.countdown_started >11
       @type_race.update(status: "ongoing")
-    end
-    if @type_race.status == "completed"
-      @type_race.save
     end
     respond_to  do |format|
       format.html
@@ -67,10 +78,15 @@ class TypeRacesController < ApplicationController
       type_race_stat = type_race.type_race_stats.find_by(user_id: current_user.id)
       type_race_stat.update(type_race_stat_params)
     end
-    if type_race_stat.progress === @templates.text
-      type_race.update(status: "completed")
+    # if type_race_stat.progress === @templates.text
+    #   type_race.update(status: "completed")
+    #   type_race_stat.update(status: "completed")
+    # end
+    respond_to  do |format|
+      format.js do
+        render json: type_race.type_race_stats
+      end
     end
-    # render json: {}, status: :ok
   end
 
   private
