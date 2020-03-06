@@ -216,7 +216,7 @@ function displayWpm(stat) {
     }else{
         $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(getWpm(stat.progress.length));
     }
-    
+
     // $('.user_row[data-id = '+ stat.user_id +']').find('.wpm span').text(stat.wpm);
 }
 
