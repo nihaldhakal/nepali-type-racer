@@ -5,7 +5,7 @@ class TypeRacesController < ApplicationController
     @type_race_ongoing_countdown_is_set = TypeRace.where(status: [:ongoing,:countdown_is_set])
     @type_race_pending = TypeRace.pending
     # If there exist a pending race it will be deleted
-    @type_race_pending.delete_all
+    @type_race_pending.delete_all if @type_race_pending.present?
     if @type_race.present? && @type_race_ongoing_countdown_is_set.present?
       # If countdown_is_set and ongoing and also the time taken is more than 3 minutes. Race must be deleted.
       # @type_race_ongoing_countdown_is_set.select do |delete_type_race|
@@ -37,11 +37,17 @@ class TypeRacesController < ApplicationController
   end
 
   def create_or_join
-    type_race_stat_last = TypeRaceStat.last
-    if race = (TypeRace.countdown_is_set.last || TypeRace.pending.last)
+    @type_race_countdown_is_set = TypeRace.find_by(status: "countdown_is_set")
+    if (race = TypeRace.find_by(status: "pending"))
       type_race_stat_race_id = TypeRaceStat.find_by(type_race_id: race.id)
-      type_race_stat = TypeRaceStat.create(user_id: current_user.id, type_race_id: type_race_stat_last.type_race_id)
-      race.update(status: "countdown_is_set", countdown_started: Time.now) if race.pending?
+      type_race_stat = TypeRaceStat.create(user_id: current_user.id, type_race_id: type_race_stat_race_id.type_race_id)
+      race.update(status: "countdown_is_set", countdown_started: Time.now)
+    elsif @type_race_countdown_is_set && (@type_race_countdown_is_set.type_race_stats.count(:user_id) < 3)
+      race = @type_race_countdown_is_set
+      unless race.type_race_stats.find_by(user_id: current_user.id).present?
+        type_race_stat_race_id = TypeRaceStat.find_by(type_race_id: race.id)
+        type_race_stat = TypeRaceStat.create(user_id: current_user.id, type_race_id: type_race_stat_race_id.type_race_id)
+      end
     else
       templates = RaceTemplate.all.sample.id
       race = TypeRace.create(race_templates_id: templates)
@@ -70,7 +76,7 @@ class TypeRacesController < ApplicationController
     if (Time.now - type_race.countdown_started) < 180 && type_race_stat.progress === @templates.text
       type_race.update(status: "completed")
       type_race_stat.update(status: "completed")
-      type_race.save
+      type_race_stat.update(type_race_stat_params)
     end
     if type_race.completed? == false  && (Time.now - type_race.countdown_started) > 180
       type_race.destroy
