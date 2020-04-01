@@ -43,7 +43,7 @@ $(document).on("turbolinks:load", function () {
                     crossOrigin: true,
                     data: {},
                     success: function (data, status, jqXHR) {
-                        if (data.status == "ongoing") {
+                        if ((data.status === 'ongoing')|| (data.status === 'completed')) {
                             $("#type_race_status").attr("data-type_race_status", data.status);
                             hideTime();
                             enableInput();
@@ -53,7 +53,7 @@ $(document).on("turbolinks:load", function () {
                 });
             }
         }, 3000);
-        if ($("#type_race_status").data("type_race_status") == "ongoing") {
+        if (($("#type_race_status").data("type_race_status") === "ongoing") || ($("#type_race_status").data("type_race_status") === "completed")) {
             setInterval((fetchProgress), 3000);
             // if ($("#type_race_status").data("type_race_status") != "ongoing"){
             //     clearInterval(ongoingInterval);
